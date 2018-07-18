@@ -1,6 +1,5 @@
 Changelog
 =========
 
-## 1.0.0-beta
-### Added
+## 1.0.0
 - Initial release.
