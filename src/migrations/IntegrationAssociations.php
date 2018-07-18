@@ -22,7 +22,7 @@ abstract class IntegrationAssociations extends Migration
     /**
      * @return string
      */
-    abstract static protected function tableName(): string;
+    abstract protected static function tableName(): string;
 
     /**
      * @inheritdoc
