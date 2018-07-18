@@ -63,13 +63,6 @@ abstract class IntegrationAssociations extends SortableAssociations
     abstract protected function fieldService(): IntegrationField;
 
     /**
-     * @param IntegrationAssociation $record
-     * @return bool
-     * @throws \yii\base\InvalidConfigException
-     */
-    abstract public function validateObject(IntegrationAssociation $record): bool;
-
-    /**
      * @inheritdoc
      * @return IntegrationAssociationQuery
      */
