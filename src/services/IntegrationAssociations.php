@@ -80,6 +80,8 @@ abstract class IntegrationAssociations extends SortableAssociations
     protected function associationQuery(
         SortableAssociationInterface $record
     ): SortableAssociationQueryInterface {
+
+        /** @var IntegrationAssociation $record */
         return $this->query(
             $record->elementId,
             $record->fieldId,
