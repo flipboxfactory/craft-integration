@@ -333,4 +333,29 @@ abstract class Integrations extends Field
 
         parent::afterElementSave($element, $isNew);
     }
+
+
+    /*******************************************
+     * SETTINGS
+     *******************************************/
+
+    /**
+     * @inheritdoc
+     */
+    public function settingsAttributes(): array
+    {
+        return array_merge(
+            [
+                'object',
+                'min',
+                'max',
+                'viewUrl',
+                'listUrl',
+                'selectedActions',
+                'selectedItemActions',
+                'selectionLabel'
+            ],
+            parent::settingsAttributes()
+        );
+    }
 }

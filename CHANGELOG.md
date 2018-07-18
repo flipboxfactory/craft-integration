@@ -1,5 +1,9 @@
 Changelog
 =========
+## 1.0.3 - 2018-07-18
+### Fixed
+- Field settings were not picking up all of the setting attributes
+
 ## 1.0.2 - 2018-07-18
 ### Changed
 - Integration Field service supports input/setting html variables overrides 
