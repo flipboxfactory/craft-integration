@@ -1,6 +1,6 @@
 Changelog
 =========
-## Unreleased
+## 1.0.2 - 2018-07-18
 ### Changed
 - Integration Field service supports input/setting html variables overrides 
 
