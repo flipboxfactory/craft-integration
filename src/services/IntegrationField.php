@@ -198,14 +198,14 @@ abstract class IntegrationField extends SortableFields
                     'limit' => $field->max ? $field->max : null,
                     'data' => [
                         'field' => $field->id,
-                        'element' => $element->getId()
+                        'element' => $element ? $element->getId() : null
                     ],
                     'actions' => $this->getActionHtml($field, $element),
                     'actionAction' => $field::ACTION_PREFORM_ACTION_PATH,
                     'createItemAction' => $field::ACTION_CREATE_ITEM_PATH,
                     'itemData' => [
                         'field' => $field->id,
-                        'element' => $element->getId()
+                        'element' => $element ? $element->getId() : null
                     ],
                     'itemSettings' => [
                         'translationCategory' => $field::TRANSLATION_CATEGORY,
@@ -214,7 +214,7 @@ abstract class IntegrationField extends SortableFields
                         'dissociateAction' => $field::ACTION_DISSOCIATION_ITEM_PATH,
                         'data' => [
                             'field' => $field->id,
-                            'element' => $element->getId()
+                            'element' => $element ? $element->getId() : null
                         ],
                         'actions' => $this->getItemActionHtml($field, $element),
                     ]

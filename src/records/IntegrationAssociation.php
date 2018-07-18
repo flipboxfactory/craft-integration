@@ -18,7 +18,10 @@ use flipbox\ember\records\traits\SiteAttribute;
  * @since 1.0.0
  *
  * @property int $fieldId
+ * @property int $elementId
  * @property string $objectId
+ * @property string $siteId
+ * @property int $sortOrder
  */
 abstract class IntegrationAssociation extends SortableAssociation
 {
