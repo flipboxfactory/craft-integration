@@ -186,61 +186,92 @@ abstract class IntegrationField extends SortableFields
 
         return Craft::$app->getView()->renderTemplate(
             $field::INPUT_TEMPLATE_PATH,
-            [
-                'field' => $field,
-                'element' => $element,
-                'value' => $query,
-                'objectLabel' => $this->getObjectLabel($field),
-                'static' => $static,
-                'itemTemplate' => $field::INPUT_ITEM_TEMPLATE_PATH,
-                'settings' => [
-                    'translationCategory' => $field::TRANSLATION_CATEGORY,
-                    'limit' => $field->max ? $field->max : null,
-                    'data' => [
-                        'field' => $field->id,
-                        'element' => $element ? $element->getId() : null
-                    ],
-                    'actions' => $this->getActionHtml($field, $element),
-                    'actionAction' => $field::ACTION_PREFORM_ACTION_PATH,
-                    'createItemAction' => $field::ACTION_CREATE_ITEM_PATH,
-                    'itemData' => [
-                        'field' => $field->id,
-                        'element' => $element ? $element->getId() : null
-                    ],
-                    'itemSettings' => [
-                        'translationCategory' => $field::TRANSLATION_CATEGORY,
-                        'actionAction' => $field::ACTION_PREFORM_ITEM_ACTION_PATH,
-                        'associateAction' => $field::ACTION_ASSOCIATION_ITEM_PATH,
-                        'dissociateAction' => $field::ACTION_DISSOCIATION_ITEM_PATH,
-                        'data' => [
-                            'field' => $field->id,
-                            'element' => $element ? $element->getId() : null
-                        ],
-                        'actions' => $this->getItemActionHtml($field, $element),
-                    ]
-                ]
-            ]
+            $this->inputHtmlVariables($field, $query, $element, $static)
         );
     }
 
     /**
      * @param Integrations $field
-     * @return null|string
+     * @param IntegrationAssociationQuery $query
+     * @param ElementInterface|null $element
+     * @param bool $static
+     * @return array
+     * @throws \craft\errors\MissingComponentException
+     * @throws \yii\base\InvalidConfigException
+     */
+    protected function inputHtmlVariables(
+        Integrations $field,
+        IntegrationAssociationQuery $query,
+        ElementInterface $element = null,
+        bool $static
+    ): array {
+        return [
+            'field' => $field,
+            'element' => $element,
+            'value' => $query,
+            'objectLabel' => $this->getObjectLabel($field),
+            'static' => $static,
+            'itemTemplate' => $field::INPUT_ITEM_TEMPLATE_PATH,
+            'settings' => [
+                'translationCategory' => $field::TRANSLATION_CATEGORY,
+                'limit' => $field->max ? $field->max : null,
+                'data' => [
+                    'field' => $field->id,
+                    'element' => $element ? $element->getId() : null
+                ],
+                'actions' => $this->getActionHtml($field, $element),
+                'actionAction' => $field::ACTION_PREFORM_ACTION_PATH,
+                'createItemAction' => $field::ACTION_CREATE_ITEM_PATH,
+                'itemData' => [
+                    'field' => $field->id,
+                    'element' => $element ? $element->getId() : null
+                ],
+                'itemSettings' => [
+                    'translationCategory' => $field::TRANSLATION_CATEGORY,
+                    'actionAction' => $field::ACTION_PREFORM_ITEM_ACTION_PATH,
+                    'associateAction' => $field::ACTION_ASSOCIATION_ITEM_PATH,
+                    'dissociateAction' => $field::ACTION_DISSOCIATION_ITEM_PATH,
+                    'data' => [
+                        'field' => $field->id,
+                        'element' => $element ? $element->getId() : null
+                    ],
+                    'actions' => $this->getItemActionHtml($field, $element),
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @param Integrations $field
+     * @return string
      * @throws Exception
      * @throws \Twig_Error_Loader
+     * @throws \craft\errors\MissingComponentException
+     * @throws \yii\base\InvalidConfigException
      */
     public function getSettingsHtml(
         Integrations $field
     ) {
         return Craft::$app->getView()->renderTemplate(
             $field::SETTINGS_TEMPLATE_PATH,
-            [
-                'field' => $field,
-                'availableActions' => $this->getAvailableActions($field),
-                'availableItemActions' => $this->getAvailableItemActions($field),
-                'translationCategory' => $field::TRANSLATION_CATEGORY,
-            ]
+            $this->settingsHtmlVariables($field)
         );
+    }
+
+    /**
+     * @param Integrations $field
+     * @return array
+     * @throws \craft\errors\MissingComponentException
+     * @throws \yii\base\InvalidConfigException
+     */
+    protected function settingsHtmlVariables(Integrations $field): array
+    {
+        return [
+            'field' => $field,
+            'availableActions' => $this->getAvailableActions($field),
+            'availableItemActions' => $this->getAvailableItemActions($field),
+            'translationCategory' => $field::TRANSLATION_CATEGORY,
+        ];
     }
 
 
