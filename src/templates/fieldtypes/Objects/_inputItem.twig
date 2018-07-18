@@ -1,0 +1,77 @@
+{% set translationCategory = translationCategory ?? 'app' %}
+<div class="integration-object{% if not record.objectId %} edit-mode{% endif %}">
+    {% block integrationIcon %}{% endblock %}
+    {% block integrationDetails %}
+        <div class="details">
+            <div class="meta ignore-sort">
+                {% from _self import objectViewUrl, objectListUrl %}
+                <div>
+                    <span class="light">Id:</span> <span class="objectIdLabel">{{ record.objectId }}</span>
+                    {% if field.viewUrl %}
+                        <a href="{{ objectViewUrl(field, record) }}" target="_blank" data-icon="world"
+                           title="View Object"></a>
+                    {% endif %}
+                </div>
+                <div>
+                    <span class="light">Object:</span> {{ field.objectLabel }}
+                    {% if field.listUrl %}
+                        <a href="{{ objectListUrl(field, record) }}" target="_blank" data-icon="world"
+                           title="View all {{ field.objectLabel }}s"></a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="upsert ignore-sort">
+                {% import "_includes/forms" as forms %}
+
+                {{ forms.textField({
+                    placeholder: "Object Id"|t(translationCategory),
+                    name: 'objectId',
+                    class: 'objectId',
+                    value: record.objectId
+                }) }}
+
+                <div class="buttons">
+                    <input type="button" class="btn small submit associate" value="Save"/>
+                    <input type="button" class="btn small toggle-edit" value="Cancel"/>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+    {% block integrationActions %}
+        <div class="actions">
+            <div class="menubtn" data-icon="settings" title="{{ 'Actions'|t('app') }}"></div>
+            <div class="menu">
+                <div class="triggers"></div>
+                <div class="edit-toggle">
+                    <ul>
+                        <li><a class="toggle-edit" data-ignore="true" href="#">Edit</a></li>
+                    </ul>
+                </div>
+                <ul>
+                    <li><a class="error remove" data-ignore="true" href="#">Dissociate</a></li>
+                </ul>
+            </div>
+        </div>
+    {% endblock %}
+</div>
+
+{% macro objectViewUrl(field, record) %}
+    {{ craft.app.view.renderString(
+        field.viewUrl,
+        {
+            instanceUrl: field.connection.instanceUrl,
+            id: record.objectId,
+            object: field.object
+        }
+    ) }}
+{% endmacro %}
+
+{% macro objectListUrl(field, record) %}
+    {{ craft.app.view.renderString(
+        field.listUrl,
+        {
+            instanceUrl: field.connection.instanceUrl,
+            object: field.object
+        }
+    ) }}
+{% endmacro %}

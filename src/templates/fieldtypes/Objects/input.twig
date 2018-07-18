@@ -1,0 +1,30 @@
+{% set id = field.handle %}
+<div id="{{ id }}" class="integration-objects-container">
+    <div class="objects">
+        {% for record in value.all() %}
+            {% block item %}
+                {% include itemTemplate with {
+                    field: field,
+                    record: record,
+                    translationCategory: translationCategory ?? 'app'
+                } only %}
+            {% endblock %}
+        {% endfor %}
+    </div>
+    {% block button %}
+        <div class="btngroup">
+            <div class="btn add icon dashed" title="{{ 'Add'|t('app') }}">Add</div>
+        </div>
+    {% endblock %}
+</div>
+
+{% block js %}
+    {% js %}
+        new Craft.IntegrationObjectsField(
+            '#{{ id|namespaceInputId|e('js') }}',
+            {{ settings|json_encode|raw }}
+        );
+    {% endjs %}
+{% endblock %}
+
+
