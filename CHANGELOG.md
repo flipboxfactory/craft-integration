@@ -1,5 +1,9 @@
 Changelog
 =========
+## 1.0.4 - 2018-08-01
+### Changed
+- Field input no longer has 'instanceId' instead the entire connection is available
+
 ## 1.0.3 - 2018-07-18
 ### Fixed
 - Field settings were not picking up all of the setting attributes

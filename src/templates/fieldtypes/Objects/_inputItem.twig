@@ -59,7 +59,7 @@
     {{ craft.app.view.renderString(
         field.viewUrl,
         {
-            instanceUrl: field.connection.instanceUrl,
+            connection: field.connection,
             id: record.objectId,
             object: field.object
         }
@@ -70,7 +70,7 @@
     {{ craft.app.view.renderString(
         field.listUrl,
         {
-            instanceUrl: field.connection.instanceUrl,
+            connection: field.connection,
             object: field.object
         }
     ) }}
