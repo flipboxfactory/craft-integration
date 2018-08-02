@@ -97,7 +97,7 @@
         {% block viewUrlField %}
             {{ forms.textField({
                 label: "Object View Url"|t(translationCategory),
-                instructions: "The following variables are available: {{ instanceUrl }}, {{ object }}, {{ id }}"|t(translationCategory),
+                instructions: "The following variables are available: {{ connection }}, {{ object }}, {{ id }}"|t(translationCategory),
                 id: 'viewUrl',
                 name: 'viewUrl',
                 class: 'code',
@@ -109,7 +109,7 @@
         {% block listUrlField %}
             {{ forms.textField({
                 label: "Object Listing Url"|t(translationCategory),
-                instructions: "The following variables are available: {{ instanceUrl }}, {{ object }}"|t(translationCategory),
+                instructions: "The following variables are available: {{ connection }}, {{ object }}"|t(translationCategory),
                 id: 'listUrl',
                 name: 'listUrl',
                 class: 'code',

@@ -1,5 +1,9 @@
 Changelog
 =========
+## 1.0.5 - 2018-08-01
+### Changed
+- Setting input label
+
 ## 1.0.4 - 2018-08-01
 ### Changed
 - Field input no longer has 'instanceId' instead the entire connection is available
