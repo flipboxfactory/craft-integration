@@ -1,5 +1,10 @@
 Changelog
 =========
+
+## Unreleased
+### Added
+- Connection management
+
 ## 1.0.5 - 2018-08-01
 ### Changed
 - Setting input label

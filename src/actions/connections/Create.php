@@ -17,7 +17,7 @@ use yii\db\ActiveRecord;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.1.0
  */
-class Create extends RecordCreate
+abstract class Create extends RecordCreate
 {
     /**
      * @return array
@@ -32,12 +32,26 @@ class Create extends RecordCreate
     }
 
     /**
+     * @inheritdoc
+     * @throws \Exception
+     * @throws \yii\db\Exception
+     */
+    protected function performAction(ActiveRecord $record): bool
+    {
+        if (!$record instanceof IntegrationConnection) {
+            return false;
+        }
+
+        return $this->saveConnection($record);
+    }
+
+    /**
      * @param IntegrationConnection $connection
      * @return bool
      * @throws \Exception
      * @throws \yii\db\Exception
      */
-    protected function performAction(IntegrationConnection $connection): bool
+    protected function saveConnection(IntegrationConnection $connection): bool
     {
         // Db transaction
         $transaction = Craft::$app->getDb()->beginTransaction();
@@ -48,7 +62,6 @@ class Create extends RecordCreate
                 $transaction->rollBack();
                 return false;
             }
-
         } catch (\Exception $e) {
             $transaction->rollBack();
             throw $e;

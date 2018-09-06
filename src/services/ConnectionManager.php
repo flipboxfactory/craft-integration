@@ -8,12 +8,12 @@
 
 namespace flipbox\craft\integration\services;
 
-use yii\base\Component;
-use flipbox\ember\exceptions\ObjectNotFoundException;
-use flipbox\ember\services\traits\records\AccessorByString;
 use flipbox\craft\integration\connections\ConnectionConfigurationInterface;
 use flipbox\craft\integration\events\RegisterConnectionConfigurationsEvent;
 use flipbox\craft\integration\records\IntegrationConnection as Connection;
+use flipbox\ember\exceptions\ObjectNotFoundException;
+use flipbox\ember\services\traits\records\AccessorByString;
+use yii\base\Component;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>

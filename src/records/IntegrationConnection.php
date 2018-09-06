@@ -97,7 +97,6 @@ abstract class IntegrationConnection extends ActiveRecordWithId
     public function getConfiguration(): ConnectionConfigurationInterface
     {
         if ($this->type === null) {
-
             if (null === ($type = $this->getConnectionManager()->findConfiguration($this))) {
                 $type = new DefaultConfiguration($this);
             }

@@ -11,12 +11,13 @@ namespace flipbox\craft\integration\actions\connections;
 use Craft;
 use flipbox\craft\integration\records\IntegrationConnection;
 use flipbox\ember\actions\record\RecordUpdate;
+use yii\db\ActiveRecord;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.1.0
  */
-class Update extends RecordUpdate
+abstract class Update extends RecordUpdate
 {
     /**
      * @return array
@@ -39,23 +40,36 @@ class Update extends RecordUpdate
     }
 
     /**
+     * @inheritdoc
+     * @throws \Exception
+     * @throws \yii\db\Exception
+     */
+    protected function performAction(ActiveRecord $record): bool
+    {
+        if (!$record instanceof IntegrationConnection) {
+            return false;
+        }
+
+        return $this->saveConnection($record);
+    }
+
+    /**
      * @param IntegrationConnection $connection
      * @return bool
      * @throws \Exception
      * @throws \yii\db\Exception
      */
-    protected function performAction(IntegrationConnection $connection): bool
+    protected function saveConnection(IntegrationConnection $connection): bool
     {
         // Db transaction
         $transaction = Craft::$app->getDb()->beginTransaction();
 
         try {
             if (!$connection->getConfiguration()->process()) {
-                $connection->addError('class', 'Unable to save provider settings');
+                $connection->addError('configuration', 'Unable to save configuration.');
                 $transaction->rollBack();
                 return false;
             }
-
         } catch (\Exception $e) {
             $transaction->rollBack();
             throw $e;
