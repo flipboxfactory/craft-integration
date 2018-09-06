@@ -13,6 +13,10 @@ use flipbox\craft\integration\fields\actions\IntegrationActionInterface;
 use flipbox\craft\integration\fields\actions\IntegrationItemActionInterface;
 use yii\base\Event;
 
+/**
+ * @author Flipbox Factory <hello@flipboxfactory.com>
+ * @since 1.0.0
+ */
 class RegisterIntegrationFieldActionsEvent extends Event
 {
     /**
