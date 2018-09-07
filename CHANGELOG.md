@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 1.1.0.1 - 2018-09-07
+### Changed
+- IntegrationConnectionManager class name for autoloading support
+
 ## 1.1.0 - 2018-09-07
 ### Added
 - Connection management
