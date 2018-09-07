@@ -1,6 +1,6 @@
 Changelog
 =========
-## Unreleased
+## 1.1.0.2 - 2018-09-07
 ### Fixed
 - Save connection trait references Yii's ActiveRecord class
 
