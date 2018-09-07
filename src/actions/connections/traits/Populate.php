@@ -6,18 +6,23 @@
  * @link       https://github.com/flipboxfactory/craft-integration/
  */
 
-namespace flipbox\craft\integration\actions\connections;
-
-use Craft;
-use flipbox\craft\integration\records\IntegrationConnection;
-use flipbox\ember\actions\record\RecordCreate;
-use yii\db\ActiveRecord;
+namespace flipbox\craft\integration\actions\connections\traits;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.1.0
  */
-abstract class Create extends RecordCreate
+trait Populate
 {
-    use traits\Populate, traits\Save;
+    /**
+     * @return array
+     */
+    protected function validBodyParams(): array
+    {
+        return [
+            'handle',
+            'class',
+            'enabled'
+        ];
+    }
 }

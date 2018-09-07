@@ -19,17 +19,7 @@ use yii\db\ActiveRecord;
  */
 abstract class Update extends RecordUpdate
 {
-    /**
-     * @return array
-     */
-    protected function validBodyParams(): array
-    {
-        return [
-            'handle',
-            'class',
-            'enabled'
-        ];
-    }
+    use traits\Populate, traits\Save;
 
     /**
      * @inheritdoc
@@ -37,45 +27,5 @@ abstract class Update extends RecordUpdate
     public function run($connection)
     {
         return parent::run($connection);
-    }
-
-    /**
-     * @inheritdoc
-     * @throws \Exception
-     * @throws \yii\db\Exception
-     */
-    protected function performAction(ActiveRecord $record): bool
-    {
-        if (!$record instanceof IntegrationConnection) {
-            return false;
-        }
-
-        return $this->saveConnection($record);
-    }
-
-    /**
-     * @param IntegrationConnection $connection
-     * @return bool
-     * @throws \Exception
-     * @throws \yii\db\Exception
-     */
-    protected function saveConnection(IntegrationConnection $connection): bool
-    {
-        // Db transaction
-        $transaction = Craft::$app->getDb()->beginTransaction();
-
-        try {
-            if (!$connection->getConfiguration()->process()) {
-                $connection->addError('configuration', 'Unable to save configuration.');
-                $transaction->rollBack();
-                return false;
-            }
-        } catch (\Exception $e) {
-            $transaction->rollBack();
-            throw $e;
-        }
-
-        $transaction->commit();
-        return true;
     }
 }
