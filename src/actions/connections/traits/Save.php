@@ -10,7 +10,7 @@ namespace flipbox\craft\integration\actions\connections\traits;
 
 use Craft;
 use flipbox\craft\integration\records\IntegrationConnection;
-use flipbox\ember\records\ActiveRecord;
+use yii\db\ActiveRecord;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
