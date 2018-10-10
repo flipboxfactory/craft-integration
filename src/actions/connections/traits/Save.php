@@ -46,6 +46,10 @@ trait Save
         try {
             if (!$connection->getConfiguration()->save()) {
                 $connection->addError('configuration', 'Unable to save configuration.');
+
+                // Validate anyway so we can see all errors
+                $connection->validate();
+
                 $transaction->rollBack();
                 return false;
             }
