@@ -46,6 +46,10 @@ trait Delete
         try {
             if (!$connection->getConfiguration()->delete()) {
                 $connection->addError('configuration', 'Unable to delete configuration.');
+
+                // Validate anyway so we can see all errors
+                $connection->validate();
+
                 $transaction->rollBack();
                 return false;
             }

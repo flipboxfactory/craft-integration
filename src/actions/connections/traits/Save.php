@@ -45,9 +45,6 @@ trait Save
 
         try {
             if (!$connection->getConfiguration()->save()) {
-                var_dump($connection->getErrors());
-                var_dump($connection->settings);
-                exit;
                 $connection->addError('configuration', 'Unable to save configuration.');
                 $transaction->rollBack();
                 return false;
