@@ -14,6 +14,7 @@ use flipbox\craft\integration\connections\DefaultConfiguration;
 use flipbox\craft\integration\services\IntegrationConnectionManager;
 use flipbox\ember\helpers\ModelHelper;
 use flipbox\ember\records\ActiveRecordWithId;
+use flipbox\ember\records\traits\StateAttribute;
 use flipbox\ember\traits\HandleRules;
 use yii\validators\UniqueValidator;
 
@@ -26,7 +27,7 @@ use yii\validators\UniqueValidator;
  */
 abstract class IntegrationConnection extends ActiveRecordWithId
 {
-    use HandleRules;
+    use HandleRules, StateAttribute;
 
     /**
      * @var ConnectionConfigurationInterface
@@ -60,6 +61,7 @@ abstract class IntegrationConnection extends ActiveRecordWithId
         return array_merge(
             parent::rules(),
             $this->handleRules(),
+            $this->stateRules(),
             [
                 [
                     [
