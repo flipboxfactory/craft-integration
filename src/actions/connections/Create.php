@@ -8,10 +8,7 @@
 
 namespace flipbox\craft\integration\actions\connections;
 
-use Craft;
-use flipbox\craft\integration\records\IntegrationConnection;
 use flipbox\ember\actions\record\RecordCreate;
-use yii\db\ActiveRecord;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>

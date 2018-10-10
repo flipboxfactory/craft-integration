@@ -40,9 +40,17 @@ class DefaultConfiguration implements ConnectionConfigurationInterface
     /**
      * @return bool
      */
-    public function process(): bool
+    public function save(): bool
     {
         return $this->connection->save();
+    }
+
+    /**
+     * @return bool
+     */
+    public function delete(): bool
+    {
+        return $this->connection->delete();
     }
 
     /**

@@ -27,11 +27,18 @@ interface ConnectionConfigurationInterface
     public static function displayName(): string;
 
     /**
-     * Process / Save a connection (and preform any additional actions necessary)
+     * Save a connection (and preform any additional actions necessary)
      *
      * @return bool
      */
-    public function process(): bool;
+    public function save(): bool;
+
+    /**
+     * Delete a connection (and preform any additional actions necessary)
+     *
+     * @return bool
+     */
+    public function delete(): bool;
 
     /**
      * @return string

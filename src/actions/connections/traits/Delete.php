@@ -14,9 +14,9 @@ use yii\db\ActiveRecord;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.1.0
+ * @since 1.1.1
  */
-trait Save
+trait Delete
 {
     /**
      * @inheritdoc
@@ -29,7 +29,7 @@ trait Save
             return false;
         }
 
-        return $this->saveConnection($record);
+        return $this->deleteConnection($record);
     }
 
     /**
@@ -38,17 +38,14 @@ trait Save
      * @throws \Exception
      * @throws \yii\db\Exception
      */
-    protected function saveConnection(IntegrationConnection $connection): bool
+    protected function deleteConnection(IntegrationConnection $connection): bool
     {
         // Db transaction
         $transaction = Craft::$app->getDb()->beginTransaction();
 
         try {
-            if (!$connection->getConfiguration()->save()) {
-                var_dump($connection->getErrors());
-                var_dump($connection->settings);
-                exit;
-                $connection->addError('configuration', 'Unable to save configuration.');
+            if (!$connection->getConfiguration()->delete()) {
+                $connection->addError('configuration', 'Unable to delete configuration.');
                 $transaction->rollBack();
                 return false;
             }

@@ -8,15 +8,15 @@
 
 namespace flipbox\craft\integration\actions\connections;
 
-use flipbox\ember\actions\record\RecordUpdate;
+use flipbox\ember\actions\record\RecordDelete;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.1.0
+ * @since 1.1.1
  */
-abstract class Update extends RecordUpdate
+abstract class Delete extends RecordDelete
 {
-    use traits\Populate, traits\Save;
+    use traits\Delete;
 
     /**
      * @inheritdoc
