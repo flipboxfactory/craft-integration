@@ -41,6 +41,20 @@ abstract class IntegrationConnection extends ActiveRecordWithId
     /**
      * @inheritdoc
      */
+    public function init()
+    {
+        parent::init();
+
+        // Normalize settings
+        $this->setAttribute(
+            'settings',
+            static::normalizeSettings($this->getAttribute('settings'))
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return array_merge(
@@ -81,14 +95,27 @@ abstract class IntegrationConnection extends ActiveRecordWithId
     {
         parent::populateRecord($record, $row);
 
-        $settings = $record->settings;
+        $settings = static::normalizeSettings($record->settings);
 
+        $record->setOldAttribute('settings', $settings);
+        $record->setAttribute('settings', $settings);
+    }
+
+    /**
+     * @param $settings
+     * @return array
+     */
+    protected static function normalizeSettings($settings): array
+    {
         if (is_string($settings)) {
             $settings = Json::decodeIfJson($settings);
         }
 
-        $record->setOldAttribute('settings', $settings);
-        $record->setAttribute('settings', $settings);
+        if (!is_array($settings)) {
+            $settings = array_filter([$settings]);
+        }
+
+        return $settings;
     }
 
     /**
