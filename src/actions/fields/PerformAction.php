@@ -9,11 +9,10 @@
 namespace flipbox\craft\integration\actions\fields;
 
 use craft\base\ElementInterface;
-use flipbox\craft\integration\actions\traits\ResolverTrait;
+use flipbox\craft\ember\actions\ManageTrait;
+use flipbox\craft\integration\actions\ResolverTrait;
 use flipbox\craft\integration\fields\actions\IntegrationActionInterface;
 use flipbox\craft\integration\fields\Integrations;
-use flipbox\craft\integration\services\IntegrationField;
-use flipbox\ember\actions\traits\Manage;
 use yii\base\Action;
 use yii\web\HttpException;
 
@@ -23,13 +22,8 @@ use yii\web\HttpException;
  */
 abstract class PerformAction extends Action
 {
-    use Manage,
+    use ManageTrait,
         ResolverTrait;
-
-    /**
-     * @return IntegrationField
-     */
-    abstract protected function fieldService(): IntegrationField;
 
     /**
      * @param string $field
@@ -45,7 +39,7 @@ abstract class PerformAction extends Action
         $field = $this->resolveField($field);
         $element = $this->resolveElement($element);
 
-        $availableActions = $this->fieldService()->getActions($field);
+        $availableActions = $field->getActions($element);
 
         foreach ($availableActions as $availableAction) {
             if ($action === get_class($availableAction)) {

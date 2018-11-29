@@ -10,12 +10,11 @@ namespace flipbox\craft\integration\actions\fields;
 
 use Craft;
 use craft\base\ElementInterface;
-use flipbox\craft\integration\actions\traits\ResolverTrait;
+use flipbox\craft\ember\actions\ManageTrait;
+use flipbox\craft\ember\helpers\SiteHelper;
+use flipbox\craft\integration\actions\ResolverTrait;
 use flipbox\craft\integration\fields\Integrations;
 use flipbox\craft\integration\records\IntegrationAssociation;
-use flipbox\craft\integration\services\IntegrationAssociations;
-use flipbox\ember\actions\traits\Manage;
-use flipbox\ember\helpers\SiteHelper;
 use yii\base\Action;
 use yii\web\HttpException;
 
@@ -25,13 +24,8 @@ use yii\web\HttpException;
  */
 abstract class CreateItem extends Action
 {
-    use Manage,
+    use ManageTrait,
         ResolverTrait;
-
-    /**
-     * @return IntegrationAssociations
-     */
-    abstract protected function associationService(): IntegrationAssociations;
 
     /**
      * @param string $field
@@ -48,7 +42,9 @@ abstract class CreateItem extends Action
         $field = $this->resolveField($field);
         $element = $this->resolveElement($element);
 
-        $record = $this->associationService()->create([
+        $recordClass = $field::recordClass();
+
+        $record = new $recordClass([
             'field' => $field,
             'element' => $element,
             'objectId' => $id,

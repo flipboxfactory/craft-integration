@@ -8,21 +8,13 @@
 
 namespace flipbox\craft\integration\actions\connections;
 
-use flipbox\ember\actions\record\RecordUpdate;
+use flipbox\craft\ember\actions\records\CreateRecord;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.1.0
  */
-abstract class Update extends RecordUpdate
+abstract class CreateConnection extends CreateRecord
 {
-    use traits\Populate, traits\Save;
-
-    /**
-     * @inheritdoc
-     */
-    public function run($connection)
-    {
-        return parent::run($connection);
-    }
+    use PopulateConnectionTrait, SaveConnectionTrait;
 }

@@ -6,7 +6,7 @@
  * @link       https://github.com/flipboxfactory/craft-integration/
  */
 
-namespace flipbox\craft\integration\actions\traits;
+namespace flipbox\craft\integration\actions;
 
 use Craft;
 use craft\base\Element;

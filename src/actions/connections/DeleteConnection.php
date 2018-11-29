@@ -6,23 +6,23 @@
  * @link       https://github.com/flipboxfactory/craft-integration/
  */
 
-namespace flipbox\craft\integration\actions\connections\traits;
+namespace flipbox\craft\integration\actions\connections;
+
+use flipbox\craft\ember\actions\records\DeleteRecord;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.1.0
+ * @since 1.1.1
  */
-trait Populate
+abstract class DeleteConnection extends DeleteRecord
 {
+    use DeleteConnectionTrait;
+
     /**
-     * @return array
+     * @inheritdoc
      */
-    protected function validBodyParams(): array
+    public function run($connection)
     {
-        return [
-            'handle',
-            'class',
-            'enabled'
-        ];
+        return parent::run($connection);
     }
 }

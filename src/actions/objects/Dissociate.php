@@ -8,14 +8,11 @@
 
 namespace flipbox\craft\integration\actions\objects;
 
-use flipbox\craft\integration\actions\traits\ResolverTrait;
+use flipbox\craft\ember\actions\ManageTrait;
+use flipbox\craft\ember\helpers\SiteHelper;
+use flipbox\craft\integration\actions\ResolverTrait;
 use flipbox\craft\integration\records\IntegrationAssociation;
-use flipbox\craft\integration\services\IntegrationAssociations;
-use flipbox\ember\actions\model\traits\Manage;
-use flipbox\ember\exceptions\RecordNotFoundException;
-use flipbox\ember\helpers\SiteHelper;
 use yii\base\Action;
-use yii\base\Model;
 use yii\web\HttpException;
 
 /**
@@ -24,13 +21,8 @@ use yii\web\HttpException;
  */
 abstract class Dissociate extends Action
 {
-    use Manage,
+    use ManageTrait,
         ResolverTrait;
-
-    /**
-     * @return IntegrationAssociations
-     */
-    abstract protected function associationService(): IntegrationAssociations;
 
     /**
      * @param string $field
@@ -52,32 +44,27 @@ abstract class Dissociate extends Action
         // Resolve Element
         $element = $this->resolveElement($element);
 
-        return $this->runInternal($this->associationService()->create([
-            'element' => $element,
-            'field' => $field,
-            'objectId' => $objectId,
-            'siteId' => SiteHelper::ensureSiteId($siteId ?: $element->siteId),
-        ]));
+        $recordClass = $field::recordClass();
+
+        $record = new $recordClass(
+            [
+                'element' => $element,
+                'field' => $field,
+                'objectId' => $objectId,
+                'siteId' => SiteHelper::ensureSiteId($siteId ?: $element->siteId),
+            ]
+        );
+
+        return $this->runInternal($record);
     }
 
     /**
      * @inheritdoc
-     * @param IntegrationAssociation $model
-     * @throws \flipbox\ember\exceptions\RecordNotFoundException
+     * @param IntegrationAssociation $record
      * @throws \Exception
      */
-    protected function performAction(Model $model): bool
+    protected function performAction(IntegrationAssociation $record): bool
     {
-        if (!$model instanceof IntegrationAssociation) {
-            throw new RecordNotFoundException(sprintf(
-                "Association must be an instance of '%s', '%s' given.",
-                IntegrationAssociation::class,
-                get_class($model)
-            ));
-        }
-
-        return $this->associationService()->dissociate(
-            $model
-        );
+        return $record->save();
     }
 }

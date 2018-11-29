@@ -21,8 +21,8 @@
 {% block js %}
     {% js %}
         new Craft.IntegrationObjectsField(
-            '#{{ id|namespaceInputId|e('js') }}',
-            {{ settings|json_encode|raw }}
+        '#{{ id|namespaceInputId|e('js') }}',
+        {{ settings|json_encode|raw }}
         );
     {% endjs %}
 {% endblock %}

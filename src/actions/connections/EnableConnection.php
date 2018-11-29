@@ -8,18 +8,18 @@
 
 namespace flipbox\craft\integration\actions\connections;
 
+use flipbox\craft\ember\actions\records\LookupRecordTrait;
+use flipbox\craft\ember\actions\records\ManageRecordTrait;
 use flipbox\craft\integration\records\IntegrationConnection;
-use flipbox\ember\actions\record\traits\Lookup;
-use flipbox\ember\actions\record\traits\Manage;
 use yii\base\Action;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.1.1
  */
-abstract class Disable extends Action
+abstract class EnableConnection extends Action
 {
-    use Manage, Lookup {
+    use ManageRecordTrait, LookupRecordTrait {
         run as traitRun;
     }
 
@@ -36,7 +36,7 @@ abstract class Disable extends Action
      */
     protected function performAction(IntegrationConnection $record): bool
     {
-        $record->enabled = false;
+        $record->enabled = true;
         return $record->save(true, ['enabled']);
     }
 }

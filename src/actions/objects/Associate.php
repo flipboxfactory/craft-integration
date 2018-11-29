@@ -8,14 +8,11 @@
 
 namespace flipbox\craft\integration\actions\objects;
 
-use flipbox\craft\integration\actions\traits\ResolverTrait;
+use flipbox\craft\ember\actions\ManageTrait;
+use flipbox\craft\ember\helpers\SiteHelper;
+use flipbox\craft\integration\actions\ResolverTrait;
 use flipbox\craft\integration\records\IntegrationAssociation;
-use flipbox\craft\integration\services\IntegrationAssociations;
-use flipbox\ember\actions\model\traits\Manage;
-use flipbox\ember\exceptions\RecordNotFoundException;
-use flipbox\ember\helpers\SiteHelper;
 use yii\base\Action;
-use yii\base\Model;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -23,7 +20,7 @@ use yii\base\Model;
  */
 abstract class Associate extends Action
 {
-    use Manage,
+    use ManageTrait,
         ResolverTrait;
 
     /**
@@ -32,11 +29,6 @@ abstract class Associate extends Action
      * @var bool
      */
     public $validate = true;
-
-    /**
-     * @return IntegrationAssociations
-     */
-    abstract protected function associationService(): IntegrationAssociations;
 
     /**
      * @param IntegrationAssociation $record
@@ -52,8 +44,7 @@ abstract class Associate extends Action
      * @param string|null $objectId
      * @param int|null $siteId
      * @param int|null $sortOrder
-     * @return Model
-     * @throws \flipbox\ember\exceptions\NotFoundException
+     * @return mixed
      * @throws \yii\web\HttpException
      */
     public function run(
@@ -72,16 +63,22 @@ abstract class Associate extends Action
 
         $siteId = SiteHelper::ensureSiteId($siteId ?: $element->siteId);
 
+        /** @var IntegrationAssociation $recordClass */
+        $recordClass = $field::recordClass();
+
         // Find existing?
         if (!empty($objectId)) {
-            $association = $this->associationService()->getByCondition([
+
+            $association = $recordClass::findOne([
                 'element' => $element,
                 'field' => $field,
                 'objectId' => $objectId,
                 'siteId' => $siteId,
             ]);
-        } else {
-            $association = $this->associationService()->create([
+        }
+
+        if (empty($association)) {
+            $association = new $recordClass([
                 'element' => $element,
                 'field' => $field,
                 'siteId' => $siteId,
@@ -96,26 +93,11 @@ abstract class Associate extends Action
 
     /**
      * @inheritdoc
-     * @param IntegrationAssociation $model
-     * @throws \flipbox\ember\exceptions\RecordNotFoundException
+     * @param IntegrationAssociation $record
      * @throws \Exception
      */
-    protected function performAction(Model $model): bool
+    protected function performAction(IntegrationAssociation $record): bool
     {
-        if (!$model instanceof IntegrationAssociation) {
-            throw new RecordNotFoundException(sprintf(
-                "Association must be an instance of '%s', '%s' given.",
-                IntegrationAssociation::class,
-                get_class($model)
-            ));
-        }
-
-        if ($this->validate === true && !$this->validate($model)) {
-            return false;
-        }
-
-        return $this->associationService()->associate(
-            $model
-        );
+        return $record->save();
     }
 }

@@ -8,21 +8,21 @@
 
 namespace flipbox\craft\integration\actions\connections;
 
-use flipbox\ember\actions\record\RecordDelete;
-
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.1.1
+ * @since 1.1.0
  */
-abstract class Delete extends RecordDelete
+trait PopulateConnectionTrait
 {
-    use traits\Delete;
-
     /**
-     * @inheritdoc
+     * @return array
      */
-    public function run($connection)
+    protected function validBodyParams(): array
     {
-        return parent::run($connection);
+        return [
+            'handle',
+            'class',
+            'enabled'
+        ];
     }
 }

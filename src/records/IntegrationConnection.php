@@ -9,13 +9,10 @@
 namespace flipbox\craft\integration\records;
 
 use craft\helpers\Json;
-use flipbox\craft\integration\connections\ConnectionConfigurationInterface;
-use flipbox\craft\integration\connections\DefaultConfiguration;
-use flipbox\craft\integration\services\IntegrationConnectionManager;
-use flipbox\ember\helpers\ModelHelper;
-use flipbox\ember\records\ActiveRecordWithId;
-use flipbox\ember\records\traits\StateAttribute;
-use flipbox\ember\traits\HandleRules;
+use flipbox\craft\ember\helpers\ModelHelper;
+use flipbox\craft\ember\models\HandleRulesTrait;
+use flipbox\craft\ember\records\ActiveRecordWithId;
+use flipbox\craft\ember\records\StateAttributeTrait;
 use yii\validators\UniqueValidator;
 
 /**
@@ -27,17 +24,18 @@ use yii\validators\UniqueValidator;
  */
 abstract class IntegrationConnection extends ActiveRecordWithId
 {
-    use HandleRules, StateAttribute;
+    use HandleRulesTrait,
+        StateAttributeTrait;
 
     /**
-     * @var ConnectionConfigurationInterface
+     * @inheritdoc
      */
-    private $type;
+    abstract public static function displayName(): string;
 
     /**
-     * @return IntegrationConnectionManager
+     * @inheritdoc
      */
-    abstract protected function getConnectionManager(): IntegrationConnectionManager;
+    abstract public function getSettingsHtml(): string;
 
     /**
      * @inheritdoc
@@ -65,7 +63,8 @@ abstract class IntegrationConnection extends ActiveRecordWithId
             [
                 [
                     [
-                        'class'
+                        'class',
+                        'type'
                     ],
                     'required'
                 ],
@@ -77,6 +76,7 @@ abstract class IntegrationConnection extends ActiveRecordWithId
                 ],
                 [
                     [
+                        'type',
                         'class',
                         'settings'
                     ],
@@ -118,21 +118,5 @@ abstract class IntegrationConnection extends ActiveRecordWithId
         }
 
         return $settings;
-    }
-
-    /**
-     * @return ConnectionConfigurationInterface
-     */
-    public function getConfiguration(): ConnectionConfigurationInterface
-    {
-        if ($this->type === null) {
-            if (null === ($type = $this->getConnectionManager()->findConfiguration($this))) {
-                $type = new DefaultConfiguration($this);
-            }
-
-            $this->type = $type;
-        }
-
-        return $this->type;
     }
 }

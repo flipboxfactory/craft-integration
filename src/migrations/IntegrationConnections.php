@@ -32,6 +32,7 @@ abstract class IntegrationConnections extends Migration
                 'id' => $this->primaryKey(),
                 'handle' => $this->string()->notNull(),
                 'class' => $this->string()->notNull(),
+                'type' => $this->string()->notNull(),
                 'settings' => $this->text(),
                 'enabled' => $this->boolean(),
                 'dateUpdated' => $this->dateTime()->notNull(),

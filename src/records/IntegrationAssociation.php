@@ -8,10 +8,12 @@
 
 namespace flipbox\craft\integration\records;
 
-use flipbox\craft\sortable\associations\records\SortableAssociation;
-use flipbox\ember\helpers\ModelHelper;
-use flipbox\ember\records\traits\ElementAttribute;
-use flipbox\ember\records\traits\SiteAttribute;
+use flipbox\craft\ember\helpers\ModelHelper;
+use flipbox\craft\ember\records\ActiveRecord;
+use flipbox\craft\ember\records\ElementAttributeTrait;
+use flipbox\craft\ember\records\FieldAttributeTrait;
+use flipbox\craft\ember\records\SiteAttributeTrait;
+use flipbox\craft\ember\records\SortableTrait;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -23,26 +25,12 @@ use flipbox\ember\records\traits\SiteAttribute;
  * @property string $siteId
  * @property int $sortOrder
  */
-abstract class IntegrationAssociation extends SortableAssociation
+abstract class IntegrationAssociation extends ActiveRecord
 {
-    use SiteAttribute,
-        ElementAttribute,
-        traits\FieldAttribute;
-
-    /**
-     * @inheritdoc
-     */
-    const TARGET_ATTRIBUTE = 'objectId';
-
-    /**
-     * @inheritdoc
-     */
-    const SOURCE_ATTRIBUTE = 'elementId';
-
-    /**
-     * The default Object Id (if none exists)
-     */
-    const DEFAULT_ID = 'UNKNOWN_ID';
+    use SiteAttributeTrait,
+        ElementAttributeTrait,
+        FieldAttributeTrait,
+        SortableTrait;
 
     /**
      * @inheritdoc
@@ -62,23 +50,23 @@ abstract class IntegrationAssociation extends SortableAssociation
             [
                 [
                     [
-                        self::TARGET_ATTRIBUTE,
+                        'objectId',
                     ],
                     'required'
                 ],
                 [
-                    self::TARGET_ATTRIBUTE,
+                    'objectId',
                     'unique',
                     'targetAttribute' => [
                         'elementId',
                         'fieldId',
                         'siteId',
-                        self::TARGET_ATTRIBUTE
+                        'objectId'
                     ]
                 ],
                 [
                     [
-                        self::TARGET_ATTRIBUTE
+                        'objectId'
                     ],
                     'safe',
                     'on' => [
@@ -87,5 +75,55 @@ abstract class IntegrationAssociation extends SortableAssociation
                 ]
             ]
         );
+    }
+
+    private function sortOrderCondition(): array
+    {
+        return [
+            'elementId' => $this->elementId,
+            'fieldId' => $this->fieldId,
+            'siteId' => $this->siteId,
+        ];
+    }
+
+    /**
+     * @param $insert
+     * @return bool
+     */
+    public function beforeSave($insert)
+    {
+        $this->ensureSortOrder(
+            $this->sortOrderCondition()
+        );
+
+        return parent::beforeSave($insert);
+    }
+
+    /**
+     * @param bool $insert
+     * @param array $changedAttributes
+     * @throws \yii\db\Exception
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        $this->autoReOrder(
+            'objectId',
+            $this->sortOrderCondition()
+        );
+
+        parent::afterSave($insert, $changedAttributes);
+    }
+
+    /**
+     * @throws \yii\db\Exception
+     */
+    public function afterDelete()
+    {
+        $this->autoReOrder(
+            'objectId',
+            $this->sortOrderCondition()
+        );
+
+        parent::afterDelete();
     }
 }

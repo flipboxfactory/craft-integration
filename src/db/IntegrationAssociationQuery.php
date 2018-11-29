@@ -10,21 +10,92 @@ namespace flipbox\craft\integration\db;
 
 use craft\db\QueryAbortedException;
 use craft\helpers\Db;
+use flipbox\craft\ember\helpers\QueryHelper;
+use flipbox\craft\ember\queries\AuditAttributesTrait;
+use flipbox\craft\ember\queries\CacheableActiveQuery;
+use flipbox\craft\ember\queries\ElementAttributeTrait;
+use flipbox\craft\ember\queries\FieldAttributeTrait;
+use flipbox\craft\ember\queries\SiteAttributeTrait;
 use flipbox\craft\integration\records\IntegrationAssociation;
-use flipbox\craft\sortable\associations\db\SortableAssociationQuery;
-use flipbox\craft\sortable\associations\db\traits\SiteAttribute;
-use flipbox\ember\db\traits\ElementAttribute;
-use flipbox\ember\helpers\QueryHelper;
 
 /**
  * @method IntegrationAssociation[] getCachedResult()
  */
-abstract class IntegrationAssociationQuery extends SortableAssociationQuery
+abstract class IntegrationAssociationQuery extends CacheableActiveQuery
 {
-    use traits\FieldAttribute,
-        traits\ObjectAttribute,
-        ElementAttribute,
-        SiteAttribute;
+    use AuditAttributesTrait,
+        FieldAttributeTrait,
+        ElementAttributeTrait,
+        SiteAttributeTrait;
+
+    /**
+     * @var int|null Sort order
+     */
+    public $sortOrder;
+
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        parent::init();
+
+        if ($this->orderBy === null) {
+            $this->orderBy = ['sortOrder' => SORT_ASC];
+        }
+    }
+
+    /**
+     * @inheritdoc
+     * return static
+     */
+    public function sortOrder($value)
+    {
+        $this->sortOrder = $value;
+        return $this;
+    }
+
+    /**
+     * @var string|string[]|null
+     */
+    public $object;
+
+    /**
+     * @param string|string[]|null $value
+     * @return static
+     */
+    public function setObjectId($value)
+    {
+        return $this->setObject($value);
+    }
+
+    /**
+     * @param string|string[]|null $value
+     * @return static
+     */
+    public function objectId($value)
+    {
+        return $this->setObject($value);
+    }
+
+    /**
+     * @param string|string[]|null $value
+     * @return static
+     */
+    public function setObject($value)
+    {
+        $this->object = $value;
+        return $this;
+    }
+
+    /**
+     * @param string|string[]|null $value
+     * @return static
+     */
+    public function object($value)
+    {
+        return $this->setObject($value);
+    }
 
     /**
      * @inheritdoc
@@ -64,9 +135,6 @@ abstract class IntegrationAssociationQuery extends SortableAssociationQuery
         }
 
         $this->applyConditions();
-        $this->applySiteConditions();
-        $this->applyObjectConditions();
-        $this->applyFieldConditions();
 
         return parent::prepare($builder);
     }
@@ -76,8 +144,24 @@ abstract class IntegrationAssociationQuery extends SortableAssociationQuery
      */
     protected function applyConditions()
     {
+        if ($this->object !== null) {
+            $this->andWhere(Db::parseParam('objectId', $this->object));
+        }
+
         if ($this->element !== null) {
             $this->andWhere(Db::parseParam('elementId', $this->parseElementValue($this->element)));
+        }
+
+        if ($this->field !== null) {
+            $this->andWhere(Db::parseParam('fieldId', $this->parseFieldValue($this->field)));
+        }
+
+        if ($this->site !== null) {
+            $this->andWhere(Db::parseParam('siteId', $this->parseSiteValue($this->site)));
+        }
+
+        if ($this->sortOrder !== null) {
+            $this->andWhere(Db::parseParam('sortOrder', $this->sortOrder));
         }
     }
 }

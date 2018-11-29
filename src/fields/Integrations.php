@@ -9,17 +9,19 @@
 namespace flipbox\craft\integration\fields;
 
 use Craft;
+use craft\base\Element;
 use craft\base\ElementInterface;
 use craft\base\Field;
-use craft\elements\db\ElementQueryInterface;
-use flipbox\craft\integration\db\IntegrationAssociationQuery;
+use craft\helpers\Component as ComponentHelper;
+use craft\helpers\StringHelper;
+use flipbox\craft\ember\helpers\ModelHelper;
+use flipbox\craft\ember\validators\MinMaxValidator;
+use flipbox\craft\integration\events\RegisterIntegrationFieldActionsEvent;
 use flipbox\craft\integration\fields\actions\IntegrationActionInterface;
 use flipbox\craft\integration\fields\actions\IntegrationItemActionInterface;
 use flipbox\craft\integration\records\IntegrationAssociation;
-use flipbox\craft\integration\services\IntegrationAssociations;
-use flipbox\craft\integration\services\IntegrationField;
-use flipbox\ember\helpers\ModelHelper;
-use flipbox\ember\validators\MinMaxValidator;
+use flipbox\craft\integration\web\assets\integrations\Integrations as IntegrationsAsset;
+use yii\db\ActiveQuery;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -27,6 +29,9 @@ use flipbox\ember\validators\MinMaxValidator;
  */
 abstract class Integrations extends Field
 {
+    use NormalizeValueTrait,
+        ModifyElementQueryTrait;
+
     /**
      * The Plugin's translation category
      */
@@ -76,6 +81,16 @@ abstract class Integrations extends Field
      * The item action event name
      */
     const EVENT_REGISTER_AVAILABLE_ITEM_ACTIONS = 'registerAvailableItemActions';
+
+    /**
+     * The default action event name
+     */
+    const DEFAULT_AVAILABLE_ACTIONS = [];
+
+    /**
+     * The default item action event name
+     */
+    const DEFAULT_AVAILABLE_ITEM_ACTIONS = [];
 
     /**
      * The input template path
@@ -133,14 +148,21 @@ abstract class Integrations extends Field
     public $selectionLabel;
 
     /**
-     * @return IntegrationField
+     * @return string
      */
-    abstract protected function fieldService(): IntegrationField;
+    abstract public static function recordClass(): string;
+
+    /*******************************************
+     * OBJECT
+     *******************************************/
 
     /**
-     * @return IntegrationAssociations
+     * @return string
      */
-    abstract protected function associationService(): IntegrationAssociations;
+    public function getObjectLabel(): string
+    {
+        return StringHelper::titleize($this->object);
+    }
 
     /**
      * @inheritdoc
@@ -158,17 +180,6 @@ abstract class Integrations extends Field
         return Craft::t(static::TRANSLATION_CATEGORY, 'Add an Object');
     }
 
-    /*******************************************
-     * OBJECT
-     *******************************************/
-
-    /**
-     * @return string
-     */
-    public function getObjectLabel(): string
-    {
-        return $this->fieldService()->getObjectLabel($this);
-    }
 
     /*******************************************
      * VALIDATION
@@ -196,42 +207,6 @@ abstract class Integrations extends Field
             ]
         ];
     }
-
-
-
-    /*******************************************
-     * VALUE
-     *******************************************/
-
-    /**
-     * @inheritdoc
-     */
-    public function normalizeValue($value, ElementInterface $element = null)
-    {
-        return $this->fieldService()->normalizeValue(
-            $this,
-            $value,
-            $element
-        );
-    }
-
-
-    /*******************************************
-     * QUERY
-     *******************************************/
-
-    /**
-     * @inheritdoc
-     */
-    public function modifyElementsQuery(ElementQueryInterface $query, $value)
-    {
-        return $this->fieldService()->modifyElementsQuery(
-            $this,
-            $query,
-            $value
-        );
-    }
-
 
     /*******************************************
      * RULES
@@ -274,7 +249,7 @@ abstract class Integrations extends Field
      *******************************************/
 
     /**
-     * @param IntegrationAssociationQuery $value
+     * @param ActiveQuery $value
      * @inheritdoc
      */
     public function getSearchKeywords($value, ElementInterface $element): string
@@ -296,15 +271,121 @@ abstract class Integrations extends Field
 
     /**
      * @inheritdoc
-     * @param IntegrationAssociationQuery $value
+     * @param ActiveQuery $value
      * @throws \Twig_Error_Loader
      * @throws \yii\base\Exception
      */
     public function getInputHtml($value, ElementInterface $element = null): string
     {
         $value->limit(null);
-        return $this->fieldService()->getInputHtml($this, $value, $element, false);
+
+        Craft::$app->getView()->registerAssetBundle(IntegrationsAsset::class);
+
+        return Craft::$app->getView()->renderTemplate(
+            static::INPUT_TEMPLATE_PATH,
+            $this->inputHtmlVariables($value, $element)
+        );
     }
+
+    /**
+     * @param ActiveQuery $query
+     * @param ElementInterface|null $element
+     * @param bool $static
+     * @return array
+     * @throws \craft\errors\MissingComponentException
+     * @throws \yii\base\InvalidConfigException
+     */
+    protected function inputHtmlVariables(
+        ActiveQuery $query,
+        ElementInterface $element = null,
+        bool $static = false
+    ): array {
+        return [
+            'field' => $this,
+            'element' => $element,
+            'value' => $query,
+            'objectLabel' => $this->getObjectLabel(),
+            'static' => $static,
+            'itemTemplate' => $this::INPUT_ITEM_TEMPLATE_PATH,
+            'settings' => [
+                'translationCategory' => $this::TRANSLATION_CATEGORY,
+                'limit' => $this->max ? $this->max : null,
+                'data' => [
+                    'field' => $this->id,
+                    'element' => $element ? $element->getId() : null
+                ],
+                'actions' => $this->getActionHtml($element),
+                'actionAction' => $this::ACTION_PREFORM_ACTION_PATH,
+                'createItemAction' => $this::ACTION_CREATE_ITEM_PATH,
+                'itemData' => [
+                    'field' => $this->id,
+                    'element' => $element ? $element->getId() : null
+                ],
+                'itemSettings' => [
+                    'translationCategory' => $this::TRANSLATION_CATEGORY,
+                    'actionAction' => $this::ACTION_PREFORM_ITEM_ACTION_PATH,
+                    'associateAction' => $this::ACTION_ASSOCIATION_ITEM_PATH,
+                    'dissociateAction' => $this::ACTION_DISSOCIATION_ITEM_PATH,
+                    'data' => [
+                        'field' => $this->id,
+                        'element' => $element ? $element->getId() : null
+                    ],
+                    'actions' => $this->getItemActionHtml($element),
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @param ElementInterface|null $element
+     * @return array
+     * @throws \craft\errors\MissingComponentException
+     * @throws \yii\base\InvalidConfigException
+     */
+    protected function getActionHtml(ElementInterface $element = null): array
+    {
+        $actionData = [];
+
+        foreach ($this->getActions($element) as $action) {
+            $actionData[] = [
+                'type' => get_class($action),
+                'destructive' => $action->isDestructive(),
+                'name' => $action->getTriggerLabel(),
+                'trigger' => $action->getTriggerHtml(),
+                'confirm' => $action->getConfirmationMessage(),
+            ];
+        }
+
+        return $actionData;
+    }
+
+    /**
+     * @param ElementInterface|null $element
+     * @return array
+     * @throws \craft\errors\MissingComponentException
+     * @throws \yii\base\InvalidConfigException
+     */
+    protected function getItemActionHtml(ElementInterface $element = null): array
+    {
+        $actionData = [];
+
+        foreach ($this->getItemActions($element) as $action) {
+            $actionData[] = [
+                'type' => get_class($action),
+                'destructive' => $action->isDestructive(),
+                'name' => $action->getTriggerLabel(),
+                'trigger' => $action->getTriggerHtml(),
+                'confirm' => $action->getConfirmationMessage(),
+            ];
+        }
+
+        return $actionData;
+    }
+
+
+    /*******************************************
+     * SETTINGS
+     *******************************************/
 
     /**
      * @inheritdoc
@@ -313,7 +394,145 @@ abstract class Integrations extends Field
      */
     public function getSettingsHtml()
     {
-        return $this->fieldService()->getSettingsHtml($this);
+        return Craft::$app->getView()->renderTemplate(
+            static::SETTINGS_TEMPLATE_PATH,
+            $this->settingsHtmlVariables()
+        );
+    }
+
+    /**
+     * @return array
+     * @throws \craft\errors\MissingComponentException
+     * @throws \yii\base\InvalidConfigException
+     */
+    protected function settingsHtmlVariables(): array
+    {
+        return [
+            'field' => $this,
+            'availableActions' => $this->getAvailableActions(),
+            'availableItemActions' => $this->getAvailableItemActions(),
+            'translationCategory' => static::TRANSLATION_CATEGORY,
+        ];
+    }
+
+
+    /*******************************************
+     * ACTIONS
+     *******************************************/
+
+    /**
+     * @return IntegrationActionInterface[]
+     * @throws \craft\errors\MissingComponentException
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getAvailableActions(): array
+    {
+        $event = new RegisterIntegrationFieldActionsEvent([
+            'actions' => static::DEFAULT_AVAILABLE_ACTIONS
+        ]);
+
+        $this->trigger(
+            $this::EVENT_REGISTER_AVAILABLE_ACTIONS,
+            $event
+        );
+
+        return $this->resolveActions(
+            array_filter((array)$event->actions),
+            IntegrationActionInterface::class
+        );
+    }
+
+    /**
+     * @return IntegrationActionInterface[]
+     * @throws \craft\errors\MissingComponentException
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getAvailableItemActions(): array
+    {
+        $event = new RegisterIntegrationFieldActionsEvent([
+            'actions' => static::DEFAULT_AVAILABLE_ITEM_ACTIONS
+        ]);
+
+        $this->trigger(
+            $this::EVENT_REGISTER_AVAILABLE_ITEM_ACTIONS,
+            $event
+        );
+
+        return $this->resolveActions(
+            array_filter((array)$event->actions),
+            IntegrationItemActionInterface::class
+        );
+    }
+
+    /**
+     * @param ElementInterface|null $element
+     * @return IntegrationActionInterface[]
+     * @throws \craft\errors\MissingComponentException
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getActions(ElementInterface $element = null): array
+    {
+        $event = new RegisterIntegrationFieldActionsEvent([
+            'actions' => $this->selectedActions,
+            'element' => $element
+        ]);
+
+        $this->trigger(
+            static::EVENT_REGISTER_ACTIONS,
+            $event
+        );
+
+        return $this->resolveActions(
+            array_filter((array)$event->actions),
+            IntegrationActionInterface::class
+        );
+    }
+
+    /**
+     * @param ElementInterface|null $element
+     * @return IntegrationItemActionInterface[]
+     * @throws \craft\errors\MissingComponentException
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getItemActions(ElementInterface $element = null): array
+    {
+        $event = new RegisterIntegrationFieldActionsEvent([
+            'actions' => $this->selectedItemActions,
+            'element' => $element
+        ]);
+
+        $this->trigger(
+            static::EVENT_REGISTER_ITEM_ACTIONS,
+            $event
+        );
+
+        return $this->resolveActions(
+            array_filter((array)$event->actions),
+            IntegrationItemActionInterface::class
+        );
+    }
+
+    /**
+     * @param array $actions
+     * @param string $instance
+     * @return array
+     * @throws \craft\errors\MissingComponentException
+     * @throws \yii\base\InvalidConfigException
+     */
+    protected function resolveActions(array $actions, string $instance)
+    {
+        foreach ($actions as $i => $action) {
+            // $action could be a string or config array
+            if (!$action instanceof $instance) {
+                $actions[$i] = $action = ComponentHelper::createComponent($action, $instance);
+
+                if ($actions[$i] === null) {
+                    unset($actions[$i]);
+                }
+            }
+        }
+
+        return array_values($actions);
     }
 
 
@@ -323,17 +542,22 @@ abstract class Integrations extends Field
 
     /**
      * @inheritdoc
-     * @throws \Exception
      */
     public function afterElementSave(ElementInterface $element, bool $isNew)
     {
-        $this->associationService()->save(
-            $element->getFieldValue($this->handle)
-        );
+        $query = $element->getFieldValue($this->handle);
 
-        parent::afterElementSave($element, $isNew);
+        (new MinMaxValidator([
+            'min' => $this->min ? (int)$this->min : null,
+            'max' => $this->max ? (int)$this->max : null
+        ]))->validate($query, $error);
+
+        if (!empty($error)) {
+            return false;
+        }
+
+        return parent::afterElementSave($element, $isNew);
     }
-
 
     /*******************************************
      * SETTINGS
@@ -357,5 +581,22 @@ abstract class Integrations extends Field
             ],
             parent::settingsAttributes()
         );
+    }
+
+    /**
+     * Returns the site ID that target elements should have.
+     *
+     * @param ElementInterface|Element|null $element
+     *
+     * @return int
+     */
+    protected function targetSiteId(ElementInterface $element = null): int
+    {
+        /** @var Element $element */
+        if (Craft::$app->getIsMultiSite() === true && $element !== null) {
+            return $element->siteId;
+        }
+
+        return Craft::$app->getSites()->currentSite->id;
     }
 }
