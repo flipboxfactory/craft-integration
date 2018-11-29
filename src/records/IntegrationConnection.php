@@ -17,7 +17,7 @@ use yii\validators\UniqueValidator;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.1.0
+ * @since 2.0.0
  *
  * @property string $class
  * @property array $settings

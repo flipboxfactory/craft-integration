@@ -14,7 +14,7 @@ use flipbox\craft\ember\web\assets\actions\Actions;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.0.0
+ * @since 2.0.0
  */
 class Integrations extends AssetBundle
 {

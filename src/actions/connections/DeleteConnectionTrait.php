@@ -13,7 +13,7 @@ use yii\db\ActiveRecord;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.1.1
+ * @since 2.0.0
  */
 trait DeleteConnectionTrait
 {

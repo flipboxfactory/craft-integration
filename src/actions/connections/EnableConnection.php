@@ -15,7 +15,7 @@ use yii\base\Action;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.1.1
+ * @since 2.0.0
  */
 abstract class EnableConnection extends Action
 {

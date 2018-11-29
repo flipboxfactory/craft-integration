@@ -12,7 +12,7 @@ use flipbox\craft\ember\actions\records\DeleteRecord;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.1.1
+ * @since 2.0.0
  */
 abstract class DeleteConnection extends DeleteRecord
 {
