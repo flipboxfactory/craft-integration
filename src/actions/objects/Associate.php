@@ -68,7 +68,6 @@ abstract class Associate extends Action
 
         // Find existing?
         if (!empty($objectId)) {
-
             $association = $recordClass::findOne([
                 'element' => $element,
                 'field' => $field,
