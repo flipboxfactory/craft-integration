@@ -11,7 +11,6 @@ namespace flipbox\craft\integration\actions\fields;
 use Craft;
 use craft\base\ElementInterface;
 use flipbox\craft\ember\actions\ManageTrait;
-use flipbox\craft\ember\helpers\SiteHelper;
 use flipbox\craft\integration\actions\ResolverTrait;
 use flipbox\craft\integration\fields\Integrations;
 use flipbox\craft\integration\records\IntegrationAssociation;
@@ -20,9 +19,9 @@ use yii\web\HttpException;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 2.0.0
+ * @since 1.0.0
  */
-abstract class CreateItem extends Action
+class CreateFieldItem extends Action
 {
     use ManageTrait,
         ResolverTrait;
@@ -31,25 +30,24 @@ abstract class CreateItem extends Action
      * @param string $field
      * @param string $element
      * @param string|null $id
+     * @param int|null $sortOrder
      * @return mixed
      * @throws HttpException
      * @throws \Twig_Error_Loader
      * @throws \yii\base\Exception
      * @throws \yii\web\UnauthorizedHttpException
      */
-    public function run(string $field, string $element, string $id = null)
+    public function run(
+        string $field,
+        string $element,
+        string $id = null,
+        int $sortOrder = null
+    )
     {
         $field = $this->resolveField($field);
         $element = $this->resolveElement($element);
 
-        $recordClass = $field::recordClass();
-
-        $record = new $recordClass([
-            'field' => $field,
-            'element' => $element,
-            'objectId' => $id,
-            'siteId' => SiteHelper::ensureSiteId($element->siteId),
-        ]);
+        $record = $field->createAssociation($id, $element, $sortOrder);
 
         return $this->runInternal($field, $element, $record);
     }
@@ -67,7 +65,8 @@ abstract class CreateItem extends Action
         Integrations $field,
         ElementInterface $element,
         IntegrationAssociation $record
-    ) {
+    )
+    {
         // Check access
         if (($access = $this->checkAccess($field, $element, $record)) !== true) {
             return $access;
@@ -90,7 +89,8 @@ abstract class CreateItem extends Action
     public function performAction(
         Integrations $field,
         IntegrationAssociation $record
-    ): array {
+    ): array
+    {
 
         $view = Craft::$app->getView();
 

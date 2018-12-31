@@ -18,9 +18,9 @@ use yii\web\HttpException;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 2.0.0
+ * @since 1.0.0
  */
-abstract class PerformAction extends Action
+class PerformFieldAction extends Action
 {
     use ManageTrait,
         ResolverTrait;
@@ -39,7 +39,7 @@ abstract class PerformAction extends Action
         $field = $this->resolveField($field);
         $element = $this->resolveElement($element);
 
-        $availableActions = $field->getActions($element);
+        $availableActions = $field->getActions();
 
         foreach ($availableActions as $availableAction) {
             if ($action === get_class($availableAction)) {
@@ -66,7 +66,8 @@ abstract class PerformAction extends Action
         IntegrationActionInterface $action,
         Integrations $field,
         ElementInterface $element
-    ) {
+    )
+    {
         // Check access
         if (($access = $this->checkAccess($action, $field, $element)) !== true) {
             return $access;
@@ -89,7 +90,8 @@ abstract class PerformAction extends Action
         IntegrationActionInterface $action,
         Integrations $field,
         ElementInterface $element
-    ): bool {
+    ): bool
+    {
         return $action->performAction($field, $element);
     }
 }

@@ -2,15 +2,15 @@
 
 /**
  * @copyright  Copyright (c) Flipbox Digital Limited
- * @license    https://github.com/flipboxfactory/craft-integration/blob/master/LICENSE
- * @link       https://github.com/flipboxfactory/craft-integration/
+ * @license    https://github.com/flipboxfactory/craft-sortable-associations/blob/master/LICENSE
+ * @link       https://github.com/flipboxfactory/craft-sortable-associations
  */
 
-namespace flipbox\craft\integration\db;
+namespace flipbox\craft\integration\queries;
 
+use Craft;
 use craft\db\QueryAbortedException;
 use craft\helpers\Db;
-use flipbox\craft\ember\helpers\QueryHelper;
 use flipbox\craft\ember\queries\AuditAttributesTrait;
 use flipbox\craft\ember\queries\CacheableActiveQuery;
 use flipbox\craft\ember\queries\ElementAttributeTrait;
@@ -20,13 +20,28 @@ use flipbox\craft\integration\records\IntegrationAssociation;
 
 /**
  * @method IntegrationAssociation[] getCachedResult()
+ * @method IntegrationAssociation[] all()
+ * @method IntegrationAssociation one()
+ *
+ * deprecated
  */
 abstract class IntegrationAssociationQuery extends CacheableActiveQuery
 {
     use AuditAttributesTrait,
         FieldAttributeTrait,
         ElementAttributeTrait,
+        ObjectAttributeTrait,
         SiteAttributeTrait;
+
+    /**
+     * The sort order attribute
+     */
+    const SORT_ORDER_ATTRIBUTE = 'sortOrder';
+
+    /**
+     * The sort order direction
+     */
+    const SORT_ORDER_DIRECTION = SORT_ASC;
 
     /**
      * @var int|null Sort order
@@ -40,14 +55,18 @@ abstract class IntegrationAssociationQuery extends CacheableActiveQuery
     {
         parent::init();
 
-        if ($this->orderBy === null) {
-            $this->orderBy = ['sortOrder' => SORT_ASC];
+        if ($this->select === null) {
+            $this->select = ['*'];
+        }
+
+        if ($this->orderBy === null && static::SORT_ORDER_ATTRIBUTE !== null) {
+            $this->orderBy = [static::SORT_ORDER_ATTRIBUTE => static::SORT_ORDER_DIRECTION];
         }
     }
 
     /**
-     * @inheritdoc
-     * return static
+     * @param $value
+     * @return $this
      */
     public function sortOrder($value)
     {
@@ -56,73 +75,17 @@ abstract class IntegrationAssociationQuery extends CacheableActiveQuery
     }
 
     /**
-     * @var string|string[]|null
-     */
-    public $object;
-
-    /**
-     * @param string|string[]|null $value
-     * @return static
-     */
-    public function setObjectId($value)
-    {
-        return $this->setObject($value);
-    }
-
-    /**
-     * @param string|string[]|null $value
-     * @return static
-     */
-    public function objectId($value)
-    {
-        return $this->setObject($value);
-    }
-
-    /**
-     * @param string|string[]|null $value
-     * @return static
-     */
-    public function setObject($value)
-    {
-        $this->object = $value;
-        return $this;
-    }
-
-    /**
-     * @param string|string[]|null $value
-     * @return static
-     */
-    public function object($value)
-    {
-        return $this->setObject($value);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function fixedOrderColumn(): string
-    {
-        return 'objectId';
-    }
-
-    /**
-     * @param array $config
+     * @param $value
      * @return $this
      */
-    public function configure(array $config)
+    public function setSortOrder($value)
     {
-        QueryHelper::configure(
-            $this,
-            $config
-        );
-
-        return $this;
+        return $this->sortOrder($value);
     }
 
     /**
      * @inheritdoc
-     *
-     * @throws QueryAbortedException if it can be determined that there won’t be any results
+     * @throws QueryAbortedException
      */
     public function prepare($builder)
     {
@@ -134,34 +97,48 @@ abstract class IntegrationAssociationQuery extends CacheableActiveQuery
             throw new QueryAbortedException();
         }
 
-        $this->applyConditions();
+        if ($this->sortOrder !== null) {
+            $this->andWhere(Db::parseParam(static::SORT_ORDER_ATTRIBUTE, $this->sortOrder));
+        }
+
+        $this->applyElementConditions();
+        $this->applyFieldConditions();
+        $this->applyObjectConditions();
+        $this->applySiteConditions();
+        $this->applyAuditAttributeConditions();
 
         return parent::prepare($builder);
     }
 
     /**
-     *  Apply query specific conditions
+     * Apply attribute conditions
      */
-    protected function applyConditions()
+    protected function applyElementConditions()
     {
-        if ($this->object !== null) {
-            $this->andWhere(Db::parseParam('objectId', $this->object));
-        }
-
         if ($this->element !== null) {
             $this->andWhere(Db::parseParam('elementId', $this->parseElementValue($this->element)));
         }
+    }
 
+    /**
+     * Apply attribute conditions
+     */
+    protected function applyFieldConditions()
+    {
         if ($this->field !== null) {
             $this->andWhere(Db::parseParam('fieldId', $this->parseFieldValue($this->field)));
         }
+    }
 
+    /**
+     * Apply attribute conditions
+     */
+    protected function applySiteConditions()
+    {
         if ($this->site !== null) {
             $this->andWhere(Db::parseParam('siteId', $this->parseSiteValue($this->site)));
-        }
-
-        if ($this->sortOrder !== null) {
-            $this->andWhere(Db::parseParam('sortOrder', $this->sortOrder));
+        } else {
+            $this->andWhere(Db::parseParam('siteId', Craft::$app->getSites()->currentSite->id));
         }
     }
 }

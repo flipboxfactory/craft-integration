@@ -10,11 +10,11 @@ namespace flipbox\craft\integration\web\assets\integrations;
 
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
-use flipbox\craft\ember\web\assets\actions\Actions;
+use flipbox\ember\web\assets\actions\Actions;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 2.0.0
+ * @since 1.0.0
  */
 class Integrations extends AssetBundle
 {

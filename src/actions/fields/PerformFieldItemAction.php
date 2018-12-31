@@ -21,9 +21,9 @@ use yii\web\HttpException;
  * Performs an action on an individual field row
  *
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 2.0.0
+ * @since 1.0.0
  */
-abstract class PerformItemAction extends Action
+class PerformFieldItemAction extends Action
 {
     use ManageTrait,
         ResolverTrait;
@@ -73,7 +73,8 @@ abstract class PerformItemAction extends Action
         Integrations $field,
         ElementInterface $element,
         IntegrationAssociation $record
-    ) {
+    )
+    {
         // Check access
         if (($access = $this->checkAccess($action, $field, $element, $record)) !== true) {
             return $access;
@@ -98,7 +99,8 @@ abstract class PerformItemAction extends Action
         Integrations $field,
         ElementInterface $element,
         IntegrationAssociation $record
-    ): bool {
+    ): bool
+    {
         return $action->performAction($field, $element, $record);
     }
 }

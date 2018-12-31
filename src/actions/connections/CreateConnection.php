@@ -12,9 +12,19 @@ use flipbox\craft\ember\actions\records\CreateRecord;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 2.0.0
+ * @since 1.1.0
  */
 abstract class CreateConnection extends CreateRecord
 {
-    use PopulateConnectionTrait, SaveConnectionTrait;
+    use  traits\Save;
+
+    /**
+     * @return array
+     */
+    public $validBodyParams = [
+        'handle',
+        'class',
+        'enabled'
+    ];
+
 }

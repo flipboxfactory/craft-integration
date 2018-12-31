@@ -9,7 +9,6 @@
 namespace flipbox\craft\integration\actions\objects;
 
 use flipbox\craft\ember\actions\ManageTrait;
-use flipbox\craft\ember\helpers\SiteHelper;
 use flipbox\craft\integration\actions\ResolverTrait;
 use flipbox\craft\integration\records\IntegrationAssociation;
 use yii\base\Action;
@@ -17,19 +16,24 @@ use yii\web\HttpException;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 2.0.0
+ * @since 1.0.0
  */
-abstract class Dissociate extends Action
+class DissociateObject extends Action
 {
     use ManageTrait,
         ResolverTrait;
+
+    /**
+     * @var int
+     */
+    public $statusCodeSuccess = 201;
 
     /**
      * @param string $field
      * @param string $element
      * @param string $objectId
      * @param int|null $siteId
-     * @return mixed
+     * @return bool|mixed
      * @throws HttpException
      */
     public function run(
@@ -37,34 +41,32 @@ abstract class Dissociate extends Action
         string $element,
         string $objectId,
         int $siteId = null
-    ) {
-        // Resolve Field
+    )
+    {
         $field = $this->resolveField($field);
-
-        // Resolve Element
         $element = $this->resolveElement($element);
 
-        $recordClass = $field::recordClass();
+        $query = $field->normalizeValue($objectId, $element);
 
-        $record = new $recordClass(
-            [
-                'element' => $element,
-                'field' => $field,
-                'objectId' => $objectId,
-                'siteId' => SiteHelper::ensureSiteId($siteId ?: $element->siteId),
-            ]
-        );
+        if (null !== $siteId) {
+            $query->siteId($siteId);
+        }
 
-        return $this->runInternal($record);
+        if (null === ($association = $query->one())) {
+            return $this->handleSuccessResponse(true);
+        }
+
+        return $this->runInternal($association);
     }
 
     /**
-     * @inheritdoc
      * @param IntegrationAssociation $record
-     * @throws \Exception
+     * @return bool
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     protected function performAction(IntegrationAssociation $record): bool
     {
-        return $record->save();
+        return $record->delete();
     }
 }

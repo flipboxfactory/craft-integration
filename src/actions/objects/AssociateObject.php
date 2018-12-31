@@ -16,9 +16,9 @@ use yii\base\Action;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 2.0.0
+ * @since 1.0.0
  */
-abstract class Associate extends Action
+class AssociateObject extends Action
 {
     use ManageTrait,
         ResolverTrait;
@@ -35,7 +35,10 @@ abstract class Associate extends Action
      * @return bool
      * @throws \Exception
      */
-    abstract protected function validate(IntegrationAssociation $record): bool;
+    protected function validate(IntegrationAssociation $record): bool
+    {
+        return true;
+    }
 
     /**
      * @param string $field
@@ -44,7 +47,7 @@ abstract class Associate extends Action
      * @param string|null $objectId
      * @param int|null $siteId
      * @param int|null $sortOrder
-     * @return mixed
+     * @return IntegrationAssociation
      * @throws \yii\web\HttpException
      */
     public function run(
@@ -54,11 +57,10 @@ abstract class Associate extends Action
         string $objectId = null,
         int $siteId = null,
         int $sortOrder = null
-    ) {
+    )
+    {
         // Resolve Field
         $field = $this->resolveField($field);
-
-        // Resolve Element
         $element = $this->resolveElement($element);
 
         $siteId = SiteHelper::ensureSiteId($siteId ?: $element->siteId);
@@ -77,11 +79,7 @@ abstract class Associate extends Action
         }
 
         if (empty($association)) {
-            $association = new $recordClass([
-                'element' => $element,
-                'field' => $field,
-                'siteId' => $siteId,
-            ]);
+            $association = $field->createAssociation($newObjectId, $element, $sortOrder, $siteId);
         }
 
         $association->objectId = $newObjectId;
@@ -97,6 +95,10 @@ abstract class Associate extends Action
      */
     protected function performAction(IntegrationAssociation $record): bool
     {
+        if ($this->validate === true && !$this->validate($record)) {
+            return false;
+        }
+
         return $record->save();
     }
 }

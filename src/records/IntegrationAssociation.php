@@ -14,16 +14,19 @@ use flipbox\craft\ember\records\ElementAttributeTrait;
 use flipbox\craft\ember\records\FieldAttributeTrait;
 use flipbox\craft\ember\records\SiteAttributeTrait;
 use flipbox\craft\ember\records\SortableTrait;
+use flipbox\craft\integration\queries\IntegrationAssociationQuery;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 2.0.0
+ * @since 1.0.0
  *
  * @property int $fieldId
  * @property int $elementId
  * @property string $objectId
  * @property string $siteId
  * @property int $sortOrder
+ *
+ * @method IntegrationAssociationQuery find()
  */
 abstract class IntegrationAssociation extends ActiveRecord
 {
@@ -31,6 +34,11 @@ abstract class IntegrationAssociation extends ActiveRecord
         ElementAttributeTrait,
         FieldAttributeTrait,
         SortableTrait;
+
+    /**
+     * The default Object Id (if none exists)
+     */
+    const DEFAULT_ID = 'UNKNOWN_ID';
 
     /**
      * @inheritdoc
@@ -77,51 +85,53 @@ abstract class IntegrationAssociation extends ActiveRecord
         );
     }
 
-    private function sortOrderCondition(): array
-    {
-        return [
-            'elementId' => $this->elementId,
-            'fieldId' => $this->fieldId,
-            'siteId' => $this->siteId,
-        ];
-    }
-
     /**
-     * @param $insert
-     * @return bool
+     * @inheritdoc
      */
     public function beforeSave($insert)
     {
         $this->ensureSortOrder(
-            $this->sortOrderCondition()
+            [
+                'objectId' => $this->objectId,
+                'fieldId' => $this->fieldId,
+                'siteId' => $this->siteId
+            ]
         );
 
         return parent::beforeSave($insert);
     }
 
     /**
-     * @param bool $insert
-     * @param array $changedAttributes
+     * @inheritdoc
      * @throws \yii\db\Exception
      */
     public function afterSave($insert, $changedAttributes)
     {
         $this->autoReOrder(
-            'objectId',
-            $this->sortOrderCondition()
+            'elementId',
+            [
+                'objectId' => $this->objectId,
+                'fieldId' => $this->fieldId,
+                'siteId' => $this->siteId
+            ]
         );
 
         parent::afterSave($insert, $changedAttributes);
     }
 
     /**
+     * @inheritdoc
      * @throws \yii\db\Exception
      */
     public function afterDelete()
     {
         $this->autoReOrder(
-            'objectId',
-            $this->sortOrderCondition()
+            'elementId',
+            [
+                'objectId' => $this->objectId,
+                'fieldId' => $this->fieldId,
+                'siteId' => $this->siteId
+            ]
         );
 
         parent::afterDelete();

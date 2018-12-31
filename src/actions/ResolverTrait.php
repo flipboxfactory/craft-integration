@@ -11,13 +11,13 @@ namespace flipbox\craft\integration\actions;
 use Craft;
 use craft\base\Element;
 use craft\base\ElementInterface;
-use flipbox\craft\integration\db\IntegrationAssociationQuery;
 use flipbox\craft\integration\fields\Integrations;
+use flipbox\craft\integration\queries\IntegrationAssociationQuery;
 use yii\web\HttpException;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 2.0.0
+ * @since 1.0.0
  */
 trait ResolverTrait
 {

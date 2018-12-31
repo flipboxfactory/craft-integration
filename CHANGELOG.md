@@ -1,9 +1,5 @@
 Changelog
 =========
-## Unreleased
-### Fixed
-- A record could return null settings however we always should expect an array 
-
 ## 1.1.0.2 - 2018-09-07
 ### Fixed
 - Save connection trait references Yii's ActiveRecord class

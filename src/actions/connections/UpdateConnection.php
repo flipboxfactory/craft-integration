@@ -12,11 +12,20 @@ use flipbox\craft\ember\actions\records\UpdateRecord;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 2.0.0
+ * @since 1.1.0
  */
 abstract class UpdateConnection extends UpdateRecord
 {
-    use PopulateConnectionTrait, SaveConnectionTrait;
+    use traits\Save;
+
+    /**
+     * @return array
+     */
+    public $validBodyParams = [
+        'handle',
+        'class',
+        'enabled'
+    ];
 
     /**
      * @inheritdoc

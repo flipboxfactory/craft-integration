@@ -6,23 +6,18 @@
  * @link       https://github.com/flipboxfactory/craft-integration/
  */
 
-namespace flipbox\craft\integration\actions\connections;
+namespace flipbox\craft\integration\events;
+
+use yii\base\Event;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 2.0.0
+ * @since 1.1.0
  */
-trait PopulateConnectionTrait
+class RegisterConnectionConfigurationsEvent extends Event
 {
     /**
-     * @return array
+     * @var array
      */
-    protected function validBodyParams(): array
-    {
-        return [
-            'handle',
-            'class',
-            'enabled'
-        ];
-    }
+    public $configurations = [];
 }

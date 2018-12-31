@@ -12,44 +12,25 @@ use craft\helpers\Json;
 use flipbox\craft\ember\helpers\ModelHelper;
 use flipbox\craft\ember\models\HandleRulesTrait;
 use flipbox\craft\ember\records\ActiveRecordWithId;
-use flipbox\craft\ember\records\StateAttributeTrait;
+use flipbox\craft\integration\connections\ConnectionConfigurationInterface;
+use flipbox\craft\integration\connections\DefaultConfiguration;
 use yii\validators\UniqueValidator;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 2.0.0
+ * @since 1.1.0
  *
  * @property string $class
  * @property array $settings
  */
 abstract class IntegrationConnection extends ActiveRecordWithId
 {
-    use HandleRulesTrait,
-        StateAttributeTrait;
+    use HandleRulesTrait;
 
     /**
-     * @inheritdoc
+     * @var ConnectionConfigurationInterface
      */
-    abstract public static function displayName(): string;
-
-    /**
-     * @inheritdoc
-     */
-    abstract public function getSettingsHtml(): string;
-
-    /**
-     * @inheritdoc
-     */
-    public function init()
-    {
-        parent::init();
-
-        // Normalize settings
-        $this->setAttribute(
-            'settings',
-            static::normalizeSettings($this->getAttribute('settings'))
-        );
-    }
+    private $type;
 
     /**
      * @inheritdoc
@@ -59,12 +40,10 @@ abstract class IntegrationConnection extends ActiveRecordWithId
         return array_merge(
             parent::rules(),
             $this->handleRules(),
-            $this->stateRules(),
             [
                 [
                     [
-                        'class',
-                        'type'
+                        'class'
                     ],
                     'required'
                 ],
@@ -76,7 +55,6 @@ abstract class IntegrationConnection extends ActiveRecordWithId
                 ],
                 [
                     [
-                        'type',
                         'class',
                         'settings'
                     ],
@@ -97,26 +75,29 @@ abstract class IntegrationConnection extends ActiveRecordWithId
     {
         parent::populateRecord($record, $row);
 
-        $settings = static::normalizeSettings($record->settings);
+        $settings = $record->settings;
+
+        if (is_string($settings)) {
+            $settings = Json::decodeIfJson($settings);
+        }
 
         $record->setOldAttribute('settings', $settings);
         $record->setAttribute('settings', $settings);
     }
 
     /**
-     * @param $settings
-     * @return array
+     * @return ConnectionConfigurationInterface
      */
-    protected static function normalizeSettings($settings): array
+    public function getConfiguration(): ConnectionConfigurationInterface
     {
-        if (is_string($settings)) {
-            $settings = Json::decodeIfJson($settings);
+        if ($this->type === null) {
+            if (null === ($type = $this->getConnectionManager()->findConfiguration($this))) {
+                $type = new DefaultConfiguration($this);
+            }
+
+            $this->type = $type;
         }
 
-        if (!is_array($settings)) {
-            $settings = array_filter([$settings]);
-        }
-
-        return $settings;
+        return $this->type;
     }
 }

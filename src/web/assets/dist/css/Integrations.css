@@ -2,65 +2,105 @@
 /* SOBJECT
 /* ----------------------------------------*/
 body.ltr .integration-objects-container .btngroup {
-  float: left; }
+    float: left;
+}
+
 body.ltr .integration-objects-container .btn.dashed {
-  margin-right: 0 !important; }
-  body.ltr .integration-objects-container .btn.dashed.menubtn {
+    margin-right: 0 !important;
+}
+
+body.ltr .integration-objects-container .btn.dashed.menubtn {
     margin-left: -1px;
-    border-left: none !important; }
+    border-left: none !important;
+}
 
 .integration-object {
-  display: flex;
-  align-items: center;
-  border: 1px solid rgba(0, 0, 0, 0.07);
-  padding: .85em 1em .85em .85em;
-  position: relative;
-  margin-bottom: .5em; }
-  .integration-object figure {
+    display: flex;
+    align-items: center;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+    padding: .85em 1em .85em .85em;
+    position: relative;
+    margin-bottom: .5em;
+}
+
+.integration-object figure {
     width: 3em;
     padding: .5em 0;
     float: left;
-    margin-right: 1em; }
-    .integration-object figure svg {
-      width: 100%;
-      height: auto; }
-  .integration-object .spinner {
+    margin-right: 1em;
+}
+
+.integration-object figure svg {
+    width: 100%;
+    height: auto;
+}
+
+.integration-object .spinner {
     position: absolute;
     bottom: .3em;
-    right: .5em; }
-  .integration-object .details .field {
-    margin-bottom: 0; }
-  .integration-object .details .buttons {
-    margin-top: 6px; }
-  .integration-object .details .meta {
-    display: block; }
-  .integration-object .details .upsert {
-    display: none; }
-  .integration-object .menubtn {
+    right: .5em;
+}
+
+.integration-object .details .field {
+    margin-bottom: 0;
+}
+
+.integration-object .details .buttons {
+    margin-top: 6px;
+}
+
+.integration-object .details .meta {
+    display: block;
+}
+
+.integration-object .details .upsert {
+    display: none;
+}
+
+.integration-object .menubtn {
     transition: opacity .25s ease-in-out;
     -moz-transition: opacity .25s ease-in-out;
     -webkit-transition: opacity .25s ease-in-out;
     position: absolute;
     top: .35em;
     right: 0;
-    opacity: 0; }
-    .integration-object .menubtn:after {
-      content: ''; }
-  .integration-object:focus .menubtn, .integration-object:hover .menubtn {
-    opacity: .8; }
-  .integration-object .menubtn {
-    cursor: pointer; }
-    .integration-object .menubtn.active {
-      opacity: .8; }
-  .integration-object.save-disabled .upsert .buttons {
-    display: none; }
-  .integration-object.edit-mode .details {
-    width: 100%; }
-  .integration-object.edit-mode .menubtn {
-    display: none; }
-  .integration-object.edit-mode .meta {
-    display: none; }
-  .integration-object.edit-mode .upsert {
-    display: block; }
+    opacity: 0;
+}
+
+.integration-object .menubtn:after {
+    content: '';
+}
+
+.integration-object:focus .menubtn, .integration-object:hover .menubtn {
+    opacity: .8;
+}
+
+.integration-object .menubtn {
+    cursor: pointer;
+}
+
+.integration-object .menubtn.active {
+    opacity: .8;
+}
+
+.integration-object.save-disabled .upsert .buttons {
+    display: none;
+}
+
+.integration-object.edit-mode .details {
+    width: 100%;
+}
+
+.integration-object.edit-mode .menubtn {
+    display: none;
+}
+
+.integration-object.edit-mode .meta {
+    display: none;
+}
+
+.integration-object.edit-mode .upsert {
+    display: block;
+}
 
 /*# sourceMappingURL=Integrations.css.map */
