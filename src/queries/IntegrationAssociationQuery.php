@@ -22,8 +22,6 @@ use flipbox\craft\integration\records\IntegrationAssociation;
  * @method IntegrationAssociation[] getCachedResult()
  * @method IntegrationAssociation[] all()
  * @method IntegrationAssociation one()
- *
- * deprecated
  */
 abstract class IntegrationAssociationQuery extends CacheableActiveQuery
 {

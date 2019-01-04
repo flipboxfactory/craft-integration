@@ -6,18 +6,21 @@
  * @link       https://github.com/flipboxfactory/craft-integration/
  */
 
-namespace flipbox\craft\integration\events;
-
-use yii\base\Event;
+namespace flipbox\craft\integration\connections;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.1.0
  */
-class RegisterConnectionConfigurationsEvent extends Event
+interface ConnectionInterface
 {
     /**
-     * @var array
+     * @return string
      */
-    public $configurations = [];
+    public static function displayName(): string;
+
+    /**
+     * @return string
+     */
+    public function getSettingsHtml(): string;
 }

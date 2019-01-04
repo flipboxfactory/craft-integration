@@ -16,8 +16,6 @@ use flipbox\craft\ember\actions\records\CreateRecord;
  */
 abstract class CreateConnection extends CreateRecord
 {
-    use  traits\Save;
-
     /**
      * @return array
      */
@@ -26,5 +24,4 @@ abstract class CreateConnection extends CreateRecord
         'class',
         'enabled'
     ];
-
 }

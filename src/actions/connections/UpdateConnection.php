@@ -16,8 +16,6 @@ use flipbox\craft\ember\actions\records\UpdateRecord;
  */
 abstract class UpdateConnection extends UpdateRecord
 {
-    use traits\Save;
-
     /**
      * @return array
      */

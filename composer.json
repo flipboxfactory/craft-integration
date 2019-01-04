@@ -1,7 +1,7 @@
 {
   "name": "flipboxfactory/craft-integration",
   "description": "Integration package for Craft CMS",
-  "version": "1.1.0.2",
+  "version": "2.0.0",
   "license": "MIT",
   "authors": [{
     "name": "Flipbox Factory",
@@ -14,9 +14,7 @@
     "yii2"
   ],
   "require": {
-    "craftcms/cms": "^3.0.14",
-    "flipboxfactory/craft-ember": "^1.0.6",
-    "flipboxfactory/craft-sortable-associations": "^1.0"
+    "flipboxfactory/craft-ember": "^2.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.0",
@@ -30,6 +28,12 @@
   "autoload-dev": {
     "psr-4": {
       "flipbox\\craft\\integration\\tests\\": "tests/src/"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-develop": "2.0.x-dev",
+      "dev-master": "2.0.x-dev"
     }
   }
 }
