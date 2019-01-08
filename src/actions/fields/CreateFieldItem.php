@@ -11,6 +11,7 @@ namespace flipbox\craft\integration\actions\fields;
 use Craft;
 use craft\base\ElementInterface;
 use flipbox\craft\ember\actions\ManageTrait;
+use flipbox\craft\ember\helpers\SiteHelper;
 use flipbox\craft\integration\actions\ResolverTrait;
 use flipbox\craft\integration\fields\Integrations;
 use flipbox\craft\integration\records\IntegrationAssociation;
@@ -42,12 +43,25 @@ class CreateFieldItem extends Action
         string $element,
         string $id = null,
         int $sortOrder = null
-    )
-    {
+    ) {
         $field = $this->resolveField($field);
         $element = $this->resolveElement($element);
 
-        $record = $field->createAssociation($id, $element, $sortOrder);
+        $recordClass = $field::recordClass();
+
+        /** @var $record IntegrationAssociation  */
+        $record = new $recordClass();
+        $record->setField($field)
+            ->setElement($element)
+            ->setSiteId(SiteHelper::ensureSiteId($element->siteId));
+
+        if($id !== null) {
+            $record->objectId = $id;
+        }
+
+        if($sortOrder !== null) {
+            $record->sortOrder = $sortOrder;
+        }
 
         return $this->runInternal($field, $element, $record);
     }

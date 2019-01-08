@@ -79,7 +79,11 @@ class AssociateObject extends Action
         }
 
         if (empty($association)) {
-            $association = $field->createAssociation($newObjectId, $element, $sortOrder, $siteId);
+            /** @var IntegrationAssociation $association */
+            $association = new $recordClass();
+            $association->setField($field)
+                ->setElement($element)
+                ->setSiteId(SiteHelper::ensureSiteId($siteId ?: $element->siteId));
         }
 
         $association->objectId = $newObjectId;

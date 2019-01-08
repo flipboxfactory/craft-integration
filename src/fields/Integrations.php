@@ -323,23 +323,6 @@ abstract class Integrations extends Field
             $value = StringHelper::toString($value);
         }
 
-        return $this->createAssociation($value, $element, $sortOrder++);
-    }
-
-    /**
-     * @param int $objectId
-     * @param ElementInterface|null $element
-     * @param int|null $sortOrder
-     * @param int|null $siteId
-     * @return IntegrationAssociation
-     */
-    public function createAssociation(
-        int $objectId,
-        ElementInterface $element = null,
-        int $sortOrder = null,
-        int $siteId = null
-    ): IntegrationAssociation
-    {
         /** @var IntegrationAssociation $recordClass */
         $recordClass = static::recordClass();
 
@@ -347,10 +330,10 @@ abstract class Integrations extends Field
         $association = new $recordClass();
         $association->setField($this)
             ->setElement($element)
-            ->setSiteId($siteId ?: $this->targetSiteId($element));
+            ->setSiteId($this->targetSiteId($element));
 
-        $association->sortOrder = $sortOrder;
-        $association->objectId = $objectId;
+        $association->sortOrder = $sortOrder++;
+        $association->objectId = $value;
 
         return $association;
     }

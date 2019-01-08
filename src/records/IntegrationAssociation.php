@@ -8,7 +8,9 @@
 
 namespace flipbox\craft\integration\records;
 
+use Craft;
 use flipbox\craft\ember\helpers\ModelHelper;
+use flipbox\craft\ember\helpers\SortOrderHelper;
 use flipbox\craft\ember\records\ActiveRecord;
 use flipbox\craft\ember\records\ElementAttributeTrait;
 use flipbox\craft\ember\records\FieldAttributeTrait;
@@ -25,8 +27,6 @@ use flipbox\craft\integration\queries\IntegrationAssociationQuery;
  * @property string $objectId
  * @property string $siteId
  * @property int $sortOrder
- *
- * @method IntegrationAssociationQuery find()
  */
 abstract class IntegrationAssociation extends ActiveRecord
 {
@@ -44,6 +44,17 @@ abstract class IntegrationAssociation extends ActiveRecord
      * @inheritdoc
      */
     protected $getterPriorityAttributes = ['fieldId', 'elementId', 'siteId'];
+
+    /**
+     * @noinspection PhpDocMissingThrowsInspection
+     * @return IntegrationAssociationQuery
+     */
+    public static function find(): IntegrationAssociationQuery
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return Craft::createObject(IntegrationAssociationQuery::class, [get_called_class()]);
+    }
 
     /**
      * @return array
@@ -92,7 +103,7 @@ abstract class IntegrationAssociation extends ActiveRecord
     {
         $this->ensureSortOrder(
             [
-                'objectId' => $this->objectId,
+                'elementId' => $this->elementId,
                 'fieldId' => $this->fieldId,
                 'siteId' => $this->siteId
             ]
@@ -108,9 +119,9 @@ abstract class IntegrationAssociation extends ActiveRecord
     public function afterSave($insert, $changedAttributes)
     {
         $this->autoReOrder(
-            'elementId',
+            'objectId',
             [
-                'objectId' => $this->objectId,
+                'elementId' => $this->elementId,
                 'fieldId' => $this->fieldId,
                 'siteId' => $this->siteId
             ]
@@ -125,13 +136,28 @@ abstract class IntegrationAssociation extends ActiveRecord
      */
     public function afterDelete()
     {
-        $this->autoReOrder(
-            'elementId',
-            [
-                'objectId' => $this->objectId,
-                'fieldId' => $this->fieldId,
-                'siteId' => $this->siteId
-            ]
+        $sortOrderAttribute = 'sortOrder';
+        $targetAttribute = 'objectId';
+        $sortOrderCondition = [
+            'elementId' => $this->elementId,
+            'fieldId' => $this->fieldId,
+            'siteId' => $this->siteId
+        ];
+
+        // All records (sorted)
+        $sortOrder = $this->sortOrderQuery($sortOrderCondition, $sortOrderAttribute)
+            ->indexBy($targetAttribute)
+            ->select([$sortOrderAttribute])
+            ->column();
+
+        $this->saveNewOrder(
+            array_flip(array_combine(
+                range($sortOrder, count($sortOrder)),
+                array_keys($sortOrder)
+            )),
+            $targetAttribute,
+            $sortOrderCondition,
+            $sortOrderAttribute
         );
 
         parent::afterDelete();

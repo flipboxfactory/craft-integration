@@ -8,11 +8,13 @@
 
 namespace flipbox\craft\integration\records;
 
+use Craft;
 use craft\helpers\Json;
 use flipbox\craft\ember\helpers\ModelHelper;
 use flipbox\craft\ember\models\HandleRulesTrait;
 use flipbox\craft\ember\records\ActiveRecordWithId;
 use flipbox\craft\integration\connections\ConnectionInterface;
+use flipbox\craft\integration\queries\IntegrationConnectionQuery;
 use yii\validators\UniqueValidator;
 
 /**
@@ -35,6 +37,17 @@ abstract class IntegrationConnection extends ActiveRecordWithId implements Conne
 
         // Always this class
         $this->class = static::class;
+    }
+
+    /**
+     * @noinspection PhpDocMissingThrowsInspection
+     * @return IntegrationConnectionQuery
+     */
+    public static function find(): IntegrationConnectionQuery
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return Craft::createObject(IntegrationConnectionQuery::class, [get_called_class()]);
     }
 
     /**

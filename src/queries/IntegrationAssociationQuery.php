@@ -23,7 +23,7 @@ use flipbox\craft\integration\records\IntegrationAssociation;
  * @method IntegrationAssociation[] all()
  * @method IntegrationAssociation one()
  */
-abstract class IntegrationAssociationQuery extends CacheableActiveQuery
+class IntegrationAssociationQuery extends CacheableActiveQuery
 {
     use AuditAttributesTrait,
         FieldAttributeTrait,

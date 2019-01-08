@@ -20,7 +20,7 @@ use flipbox\craft\integration\records\IntegrationConnection;
  * @method IntegrationConnection[] all()
  * @method IntegrationConnection one()
  */
-abstract class IntegrationConnectionQuery extends CacheableActiveQuery
+class IntegrationConnectionQuery extends CacheableActiveQuery
 {
     use AuditAttributesTrait,
         SiteAttributeTrait;
@@ -100,9 +100,8 @@ abstract class IntegrationConnectionQuery extends CacheableActiveQuery
             'handle'
         ];
 
-        foreach ($attributes as $property => $attribute) {
-            $property = is_numeric($property) ? $attribute : $property;
-            if (null !== ($value = $this->{$property})) {
+        foreach ($attributes as $attribute) {
+            if (null !== ($value = $this->{$attribute})) {
                 $this->andWhere(Db::parseParam($attribute, $value));
             }
         }
