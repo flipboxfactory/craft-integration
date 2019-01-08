@@ -8,26 +8,9 @@
 
 namespace flipbox\craft\integration\fields;
 
-use Craft;
-use craft\base\Element;
-use craft\base\ElementInterface;
-use craft\base\Field;
 use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
-use craft\helpers\Component as ComponentHelper;
 use craft\helpers\Db;
-use craft\helpers\StringHelper;
-use flipbox\craft\ember\helpers\ModelHelper;
-use flipbox\craft\ember\records\ActiveRecord;
-use flipbox\craft\ember\validators\MinMaxValidator;
-use flipbox\craft\integration\events\RegisterIntegrationFieldActionsEvent;
-use flipbox\craft\integration\fields\actions\IntegrationActionInterface;
-use flipbox\craft\integration\fields\actions\IntegrationItemActionInterface;
-use flipbox\craft\integration\queries\IntegrationAssociationQuery;
-use flipbox\craft\integration\records\IntegrationAssociation;
-use flipbox\craft\integration\web\assets\integrations\Integrations as IntegrationsAsset;
-use yii\base\Exception;
-use yii\helpers\ArrayHelper;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -71,8 +54,8 @@ trait ModifyElementQueryTrait
     protected function modifyElementsQueryForStringValue(
         ElementQuery $query,
         string $value
-    )
-    {
+    ) {
+    
 
         if ($value === 'not :empty:') {
             $value = ':notempty:';
@@ -93,8 +76,8 @@ trait ModifyElementQueryTrait
     protected function modifyElementsQueryForTargetValue(
         ElementQuery $query,
         $value
-    )
-    {
+    ) {
+    
 
         $alias = $this->tableAlias();
         $name = '{{%' . $this->tableAlias() . '}}';
@@ -121,8 +104,8 @@ trait ModifyElementQueryTrait
     protected function modifyElementsQueryForEmptyValue(
         ElementQuery $query,
         string $value
-    )
-    {
+    ) {
+    
 
         $operator = ($value === ':notempty:' ? '!=' : '=');
         $query->subQuery->andWhere(
@@ -144,8 +127,8 @@ trait ModifyElementQueryTrait
         string $alias,
         string $name,
         string $operator
-    ): string
-    {
+    ): string {
+    
 
         return "(select count([[{$alias}.elementId]]) from " .
             $name .

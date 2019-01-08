@@ -9,13 +9,9 @@
 namespace flipbox\craft\integration\fields;
 
 use Craft;
-use craft\base\Element;
 use craft\base\ElementInterface;
 use craft\base\Field;
-use craft\elements\db\ElementQuery;
-use craft\elements\db\ElementQueryInterface;
 use craft\helpers\Component as ComponentHelper;
-use craft\helpers\Db;
 use craft\helpers\StringHelper;
 use flipbox\craft\ember\helpers\ModelHelper;
 use flipbox\craft\ember\records\ActiveRecord;
@@ -316,6 +312,7 @@ abstract class Integrations extends Field
         bool $static = false
     ): array {
     
+
         return [
             'field' => $this,
             'element' => $element,

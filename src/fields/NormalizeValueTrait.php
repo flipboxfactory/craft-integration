@@ -8,7 +8,6 @@
 
 namespace flipbox\craft\integration\fields;
 
-use Craft;
 use craft\base\Element;
 use craft\base\ElementInterface;
 use craft\helpers\StringHelper;
@@ -60,8 +59,8 @@ trait NormalizeValueTrait
     public function normalizeValue(
         $value,
         ElementInterface $element = null
-    )
-    {
+    ) {
+    
 
         if ($value instanceof IntegrationAssociationQuery) {
             return $value;
@@ -81,8 +80,8 @@ trait NormalizeValueTrait
         IntegrationAssociationQuery $query,
         $value,
         ElementInterface $element = null
-    )
-    {
+    ) {
+    
 
         if (is_array($value)) {
             $this->normalizeQueryInputValues($query, $value, $element);
@@ -104,8 +103,8 @@ trait NormalizeValueTrait
         IntegrationAssociationQuery $query,
         array $value,
         ElementInterface $element = null
-    )
-    {
+    ) {
+    
 
         $models = [];
         $sortOrder = 1;
@@ -118,15 +117,15 @@ trait NormalizeValueTrait
     /**
      * @param $value
      * @param int $sortOrder
-     * @param ElementInterface|null $element
+     * @param ElementInterface|Element|null $element
      * @return IntegrationAssociation
      */
     protected function normalizeQueryInputValue(
         $value,
         int &$sortOrder,
         ElementInterface $element = null
-    ): IntegrationAssociation
-    {
+    ): IntegrationAssociation {
+    
 
         if (is_array($value)) {
             $value = StringHelper::toString($value);
@@ -152,8 +151,8 @@ trait NormalizeValueTrait
      */
     protected function normalizeQueryEmptyValue(
         IntegrationAssociationQuery $query
-    )
-    {
+    ) {
+    
         $query->setCachedResult([]);
     }
 }
