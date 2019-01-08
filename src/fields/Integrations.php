@@ -232,8 +232,8 @@ abstract class Integrations extends Field
     public function normalizeValue(
         $value,
         ElementInterface $element = null
-    )
-    {
+    ) {
+    
         if ($value instanceof IntegrationAssociationQuery) {
             return $value;
         }
@@ -275,8 +275,8 @@ abstract class Integrations extends Field
         IntegrationAssociationQuery $query,
         $value,
         ElementInterface $element = null
-    )
-    {
+    ) {
+    
         if (is_array($value)) {
             $this->normalizeQueryInputValues($query, $value, $element);
             return;
@@ -297,8 +297,8 @@ abstract class Integrations extends Field
         IntegrationAssociationQuery $query,
         array $value,
         ElementInterface $element = null
-    )
-    {
+    ) {
+    
         $models = [];
         $sortOrder = 1;
         foreach ($value as $val) {
@@ -317,8 +317,8 @@ abstract class Integrations extends Field
         $value,
         int &$sortOrder,
         ElementInterface $element = null
-    ): IntegrationAssociation
-    {
+    ): IntegrationAssociation {
+    
         if (is_array($value)) {
             $value = StringHelper::toString($value);
         }
@@ -343,8 +343,8 @@ abstract class Integrations extends Field
      */
     protected function normalizeQueryEmptyValue(
         IntegrationAssociationQuery $query
-    )
-    {
+    ) {
+    
         $query->setCachedResult([]);
     }
 
@@ -399,8 +399,8 @@ abstract class Integrations extends Field
     protected function modifyElementsQueryForStringValue(
         ElementQuery $query,
         string $value
-    )
-    {
+    ) {
+    
         if ($value === 'not :empty:') {
             $value = ':notempty:';
         }
@@ -420,8 +420,8 @@ abstract class Integrations extends Field
     protected function modifyElementsQueryForTargetValue(
         ElementQuery $query,
         $value
-    )
-    {
+    ) {
+    
         $alias = $this->tableAlias();
         $name = '{{%' . $this->tableAlias() . '}}';
 
@@ -447,8 +447,8 @@ abstract class Integrations extends Field
     protected function modifyElementsQueryForEmptyValue(
         ElementQuery $query,
         string $value
-    )
-    {
+    ) {
+    
         $operator = ($value === ':notempty:' ? '!=' : '=');
         $query->subQuery->andWhere(
             $this->emptyValueSubSelect(
@@ -469,8 +469,8 @@ abstract class Integrations extends Field
         string $alias,
         string $name,
         string $operator
-    ): string
-    {
+    ): string {
+    
         return "(select count([[{$alias}.elementId]]) from " .
             $name .
             " {{{$alias}}} where [[{$alias}.elementId" .
@@ -569,8 +569,8 @@ abstract class Integrations extends Field
         IntegrationAssociationQuery $query,
         ElementInterface $element = null,
         bool $static = false
-    ): array
-    {
+    ): array {
+    
         return [
             'field' => $this,
             'element' => $element,
@@ -822,9 +822,7 @@ abstract class Integrations extends Field
             }
 
             parent::afterElementSave($element, $isNew);
-
         } else {
-
             $associations = [];
             $order = 1;
             foreach ($records as $record) {

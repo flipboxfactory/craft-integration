@@ -66,8 +66,8 @@ class PerformFieldAction extends Action
         IntegrationActionInterface $action,
         Integrations $field,
         ElementInterface $element
-    )
-    {
+    ) {
+    
         // Check access
         if (($access = $this->checkAccess($action, $field, $element)) !== true) {
             return $access;
@@ -90,8 +90,8 @@ class PerformFieldAction extends Action
         IntegrationActionInterface $action,
         Integrations $field,
         ElementInterface $element
-    ): bool
-    {
+    ): bool {
+    
         return $action->performAction($field, $element);
     }
 }

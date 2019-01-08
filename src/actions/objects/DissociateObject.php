@@ -41,8 +41,8 @@ class DissociateObject extends Action
         string $element,
         string $objectId,
         int $siteId = null
-    )
-    {
+    ) {
+    
         $field = $this->resolveField($field);
         $element = $this->resolveElement($element);
 

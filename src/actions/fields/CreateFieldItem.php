@@ -55,11 +55,11 @@ class CreateFieldItem extends Action
             ->setElement($element)
             ->setSiteId(SiteHelper::ensureSiteId($element->siteId));
 
-        if($id !== null) {
+        if ($id !== null) {
             $record->objectId = $id;
         }
 
-        if($sortOrder !== null) {
+        if ($sortOrder !== null) {
             $record->sortOrder = $sortOrder;
         }
 
@@ -79,8 +79,8 @@ class CreateFieldItem extends Action
         Integrations $field,
         ElementInterface $element,
         IntegrationAssociation $record
-    )
-    {
+    ) {
+    
         // Check access
         if (($access = $this->checkAccess($field, $element, $record)) !== true) {
             return $access;
@@ -103,8 +103,8 @@ class CreateFieldItem extends Action
     public function performAction(
         Integrations $field,
         IntegrationAssociation $record
-    ): array
-    {
+    ): array {
+    
 
         $view = Craft::$app->getView();
 
