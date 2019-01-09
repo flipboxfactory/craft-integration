@@ -515,8 +515,6 @@ abstract class Integrations extends Field
         return $actionData;
     }
 
-
-
     /*******************************************
      * EVENTS
      *******************************************/
@@ -533,10 +531,16 @@ abstract class Integrations extends Field
         /** @var IntegrationAssociationQuery $query */
         $query = $element->getFieldValue($this->handle);
 
+        // Cached results
+        if (null === ($records = $query->getCachedResult())) {
+            parent::afterElementSave($element, $isNew);
+            return;
+        }
+
         $currentAssociations = [];
 
-        if (!$isNew) {
-            /** @var ActiveRecord $recordClass */
+        if ($isNew === false) {
+            /** @var IntegrationAssociation $recordClass */
             $recordClass = static::recordClass();
 
             /** @var IntegrationAssociationQuery $existingQuery */
@@ -551,7 +555,7 @@ abstract class Integrations extends Field
 
         $success = true;
 
-        if (null === ($records = $query->getCachedResult())) {
+        if (empty($records)) {
             foreach ($currentAssociations as $currentAssociation) {
                 if (!$currentAssociation->delete()) {
                     $success = false;
@@ -564,36 +568,37 @@ abstract class Integrations extends Field
             }
 
             parent::afterElementSave($element, $isNew);
-        } else {
-            $associations = [];
-            $order = 1;
-            foreach ($records as $record) {
-                if (null === ($association = ArrayHelper::remove($currentAssociations, $record->objectId))) {
-                    $association = $record;
-                }
-                $association->sortOrder = $order++;
-                $associations[] = $association;
-            }
+            return;
 
-            // DeleteOrganization those removed
-            foreach ($currentAssociations as $currentAssociation) {
-                if (!$currentAssociation->delete()) {
-                    $success = false;
-                }
-            }
+        }
 
-            foreach ($associations as $association) {
-                if (!$association->save()) {
-                    $success = false;
-                }
-            }
+        $associations = [];
+        $order = 1;
 
-            if (!$success) {
-                $this->addError('users', 'Unable to associate objects.');
-                throw new Exception('Unable to associate objects.');
+        foreach ($records as $record) {
+            if (null === ($association = ArrayHelper::remove($currentAssociations, $record->objectId))) {
+                $association = $record;
             }
+            $association->sortOrder = $order++;
+            $associations[] = $association;
+        }
 
-            parent::afterElementSave($element, $isNew);
+        // DeleteOrganization those removed
+        foreach ($currentAssociations as $currentAssociation) {
+            if (!$currentAssociation->delete()) {
+                $success = false;
+            }
+        }
+
+        foreach ($associations as $association) {
+            if (!$association->save()) {
+                $success = false;
+            }
+        }
+
+        if (!$success) {
+            $this->addError('users', 'Unable to associate objects.');
+            throw new Exception('Unable to associate objects.');
         }
     }
 
