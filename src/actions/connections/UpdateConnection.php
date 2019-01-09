@@ -12,7 +12,7 @@ use flipbox\craft\ember\actions\records\UpdateRecord;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.1.0
+ * @since 2.0.0
  */
 abstract class UpdateConnection extends UpdateRecord
 {

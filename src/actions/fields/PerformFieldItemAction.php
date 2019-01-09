@@ -21,7 +21,7 @@ use yii\web\HttpException;
  * Performs an action on an individual field row
  *
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.0.0
+ * @since 2.0.0
  */
 class PerformFieldItemAction extends Action
 {

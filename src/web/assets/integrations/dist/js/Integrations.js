@@ -42,7 +42,7 @@ Craft.IntegrationObjectsActions = Garnish.Base.extend(
                     $safeList.appendTo($menu);
                 }
 
-                if ($safeList && $destructiveList) {
+                if ($safeList || $destructiveList) {
                     $('<hr/>').appendTo($menu);
                 }
 
