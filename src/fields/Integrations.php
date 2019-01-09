@@ -569,7 +569,6 @@ abstract class Integrations extends Field
 
             parent::afterElementSave($element, $isNew);
             return;
-
         }
 
         $associations = [];
