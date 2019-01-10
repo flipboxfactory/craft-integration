@@ -29,6 +29,11 @@ abstract class IntegrationConnection extends ActiveRecordWithId implements Conne
     use HandleRulesTrait;
 
     /**
+     * The query class this record uses
+     */
+    const QUERY_CLASS = IntegrationConnectionQuery::class;
+
+    /**
      * @inheritdoc
      */
     public function init()
@@ -40,6 +45,28 @@ abstract class IntegrationConnection extends ActiveRecordWithId implements Conne
     }
 
     /**
+     * @inheritdoc
+     */
+    public static function instantiate($row)
+    {
+        $class = $row['class'] ?? static::class;
+        return new $class;
+    }
+
+    /**
+     * @param static $record
+     * @param $row
+     */
+    public static function populateRecord($record, $row)
+    {
+        parent::populateRecord($record, $row);
+        $record->setOldAttribute('settings', $record->ensureSettings());
+    }
+
+    /*******************************************
+     * QUERY
+     *******************************************/
+    /**
      * @noinspection PhpDocMissingThrowsInspection
      * @return IntegrationConnectionQuery
      */
@@ -47,8 +74,31 @@ abstract class IntegrationConnection extends ActiveRecordWithId implements Conne
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         /** @noinspection PhpUnhandledExceptionInspection */
-        return Craft::createObject(IntegrationConnectionQuery::class, [get_called_class()]);
+        return Craft::createObject(
+            static::QUERY_CLASS,
+            [
+                get_called_class()
+            ]
+        );
     }
+
+    /**
+     * @inheritdoc
+     */
+    protected static function findByCondition($condition)
+    {
+        if (!is_numeric($condition) && is_string($condition)) {
+            $condition = ['handle' => $condition];
+        }
+
+        /** @noinspection PhpInternalEntityUsedInspection */
+        return parent::findByCondition($condition);
+    }
+
+
+    /*******************************************
+     * RULES
+     *******************************************/
 
     /**
      * @inheritdoc
@@ -85,27 +135,10 @@ abstract class IntegrationConnection extends ActiveRecordWithId implements Conne
         );
     }
 
-    /**
-     * @inheritdoc
-     */
-    public static function instantiate($row)
-    {
-        $class = $row['class'] ?? static::class;
-        return new $class;
-    }
 
-    /**
-     * @inheritdoc
-     */
-    protected static function findByCondition($condition)
-    {
-        if (!is_numeric($condition) && is_string($condition)) {
-            $condition = ['handle' => $condition];
-        }
-
-        /** @noinspection PhpInternalEntityUsedInspection */
-        return parent::findByCondition($condition);
-    }
+    /*******************************************
+     * EVENTS
+     *******************************************/
 
     /**
      * @param bool $insert
@@ -117,28 +150,48 @@ abstract class IntegrationConnection extends ActiveRecordWithId implements Conne
         $this->ensureSettings();
     }
 
+
+    /*******************************************
+     * SETTINGS
+     *******************************************/
+
     /**
-     * @param static $record
-     * @param $row
+     * @param string $attribute
+     * @return mixed
      */
-    public static function populateRecord($record, $row)
+    public function getSettingsValue(string $attribute)
     {
-        parent::populateRecord($record, $row);
-        $record->ensureSettings();
+        $settings = $this->ensureSettings();
+        return $settings[$attribute] ?? null;
     }
 
     /**
-     *
+     * @param string $attribute
+     * @param $value
+     * @return $this
+     */
+    public function setSettingsValue(string $attribute, $value)
+    {
+        $settings = $this->ensureSettings();
+        $settings[$attribute] = $value;
+
+        $this->setAttribute('settings', $settings);
+        return $this;
+    }
+
+    /**
+     * @return array|null
      */
     protected function ensureSettings()
     {
-        $settings = $this->settings;
+        $settings = $this->getAttribute('settings');
 
         if (is_string($settings)) {
             $settings = Json::decodeIfJson($settings);
         }
 
-        $this->setOldAttribute('settings', $settings);
         $this->setAttribute('settings', $settings);
+
+        return $settings;
     }
 }
