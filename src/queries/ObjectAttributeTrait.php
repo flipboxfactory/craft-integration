@@ -11,6 +11,10 @@ namespace flipbox\craft\integration\queries;
 use craft\helpers\Db;
 use yii\db\Expression;
 
+/**
+ * @author Flipbox Factory <hello@flipboxfactory.com>
+ * @since 2.0.0
+ */
 trait ObjectAttributeTrait
 {
     /**

@@ -2,8 +2,8 @@
 
 /**
  * @copyright  Copyright (c) Flipbox Digital Limited
- * @license    https://github.com/flipboxfactory/craft-sortable-associations/blob/master/LICENSE
- * @link       https://github.com/flipboxfactory/craft-sortable-associations
+ * @license    https://github.com/flipboxfactory/craft-integration/blob/master/LICENSE
+ * @link       https://github.com/flipboxfactory/craft-integration/
  */
 
 namespace flipbox\craft\integration\queries;
@@ -19,6 +19,9 @@ use flipbox\craft\ember\queries\SiteAttributeTrait;
 use flipbox\craft\integration\records\IntegrationAssociation;
 
 /**
+ * @author Flipbox Factory <hello@flipboxfactory.com>
+ * @since 2.0.0
+ *
  * @method IntegrationAssociation[] getCachedResult()
  * @method IntegrationAssociation[] all()
  * @method IntegrationAssociation one()
