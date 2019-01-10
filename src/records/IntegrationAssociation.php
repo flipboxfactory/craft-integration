@@ -135,28 +135,13 @@ abstract class IntegrationAssociation extends ActiveRecord
      */
     public function afterDelete()
     {
-        $sortOrderAttribute = 'sortOrder';
-        $targetAttribute = 'objectId';
-        $sortOrderCondition = [
-            'elementId' => $this->elementId,
-            'fieldId' => $this->fieldId,
-            'siteId' => $this->siteId
-        ];
-
-        // All records (sorted)
-        $sortOrder = $this->sortOrderQuery($sortOrderCondition, $sortOrderAttribute)
-            ->indexBy($targetAttribute)
-            ->select([$sortOrderAttribute])
-            ->column();
-
-        $this->saveNewOrder(
-            array_flip(array_combine(
-                range($sortOrder, count($sortOrder)),
-                array_keys($sortOrder)
-            )),
-            $targetAttribute,
-            $sortOrderCondition,
-            $sortOrderAttribute
+        $this->sequentialOrder(
+            'objectId',
+            [
+                'elementId' => $this->elementId,
+                'fieldId' => $this->fieldId,
+                'siteId' => $this->siteId
+            ]
         );
 
         parent::afterDelete();
