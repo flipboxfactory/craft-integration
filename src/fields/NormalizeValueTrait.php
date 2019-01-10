@@ -60,8 +60,6 @@ trait NormalizeValueTrait
         $value,
         ElementInterface $element = null
     ) {
-    
-
         if ($value instanceof IntegrationAssociationQuery) {
             return $value;
         }
@@ -81,8 +79,6 @@ trait NormalizeValueTrait
         $value,
         ElementInterface $element = null
     ) {
-    
-
         if (is_array($value)) {
             $this->normalizeQueryInputValues($query, $value, $element);
             return;
