@@ -9,6 +9,7 @@
 namespace flipbox\craft\integration\actions\objects;
 
 use flipbox\craft\ember\actions\ManageTrait;
+use flipbox\craft\ember\helpers\SiteHelper;
 use flipbox\craft\integration\actions\ResolverTrait;
 use flipbox\craft\integration\records\IntegrationAssociation;
 use yii\base\Action;
@@ -42,15 +43,18 @@ class DissociateObject extends Action
         string $objectId,
         int $siteId = null
     ) {
-    
+
         $field = $this->resolveField($field);
         $element = $this->resolveElement($element);
 
-        $query = $field->normalizeValue($objectId, $element);
+        /** @var IntegrationAssociation $recordClass */
+        $recordClass = $field::recordClass();
 
-        if (null !== $siteId) {
-            $query->siteId($siteId);
-        }
+        $query = $recordClass::find();
+        $query->setElement($element)
+            ->setField($field)
+            ->setObjectId($objectId)
+            ->setSiteId(SiteHelper::ensureSiteId($siteId ?: $element->siteId));
 
         if (null === ($association = $query->one())) {
             return $this->handleSuccessResponse(true);
