@@ -1,5 +1,8 @@
 Changelog
 =========
+## 2.0.1 - 2019-01-15
+### Fixed
+- Incorrect verbiage w/ min/max error messaging
 
 ## 2.0.0 - 2019-01-08
 ### Changed
