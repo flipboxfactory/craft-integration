@@ -208,11 +208,15 @@ abstract class Integrations extends Field
                 'max' => $this->max ? (int)$this->max : null,
                 'tooFew' => Craft::t(
                     static::TRANSLATION_CATEGORY,
-                    '{attribute} should contain at least {min, number} {min, plural, one{domain} other{domains}}.'
+                    '{attribute} should contain at least ' .
+                    '{min, number} ' .
+                    '{min, plural, one{association} other{associations}}.'
                 ),
                 'tooMany' => Craft::t(
                     static::TRANSLATION_CATEGORY,
-                    '{attribute} should contain at most {max, number} {max, plural, one{domain} other{domains}}.'
+                    '{attribute} should contain at most ' .
+                    '{max, number} ' .
+                    '{max, plural, one{association} other{associations}}.'
                 ),
                 'skipOnEmpty' => false
             ]
