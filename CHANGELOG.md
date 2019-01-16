@@ -1,6 +1,6 @@
 Changelog
 =========
-## Unreleased
+## 2.0.2 - 2019-01-16
 ### Added
 - Field type is included in index as an option.
 
