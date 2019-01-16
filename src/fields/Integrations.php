@@ -621,7 +621,6 @@ abstract class Integrations extends Field
                 ->column();
 
             return StringHelper::toString($ids, ', ');
-
         }
 
         return '';
