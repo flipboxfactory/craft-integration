@@ -11,6 +11,7 @@ namespace flipbox\craft\integration\fields;
 use Craft;
 use craft\base\ElementInterface;
 use craft\base\Field;
+use craft\base\PreviewableFieldInterface;
 use craft\helpers\Component as ComponentHelper;
 use craft\helpers\StringHelper;
 use flipbox\craft\ember\helpers\ModelHelper;
@@ -29,7 +30,7 @@ use yii\helpers\ArrayHelper;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 2.0.0
  */
-abstract class Integrations extends Field
+abstract class Integrations extends Field implements PreviewableFieldInterface
 {
     use ModifyElementQueryTrait,
         NormalizeValueTrait;
