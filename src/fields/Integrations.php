@@ -607,6 +607,28 @@ abstract class Integrations extends Field
 
 
     /*******************************************
+     * INDEX
+     *******************************************/
+
+    /**
+     * @inheritdoc
+     */
+    public function getTableAttributeHtml($value, ElementInterface $element): string
+    {
+        if ($value instanceof IntegrationAssociationQuery) {
+            $ids = (clone $value)
+                ->select(['objectId'])
+                ->column();
+
+            return StringHelper::toString($ids, ', ');
+
+        }
+
+        return '';
+    }
+
+
+    /*******************************************
      * SETTINGS
      *******************************************/
 

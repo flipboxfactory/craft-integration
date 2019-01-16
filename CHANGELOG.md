@@ -1,5 +1,9 @@
 Changelog
 =========
+## Unreleased
+### Added
+- Field type is included in index as an option.
+
 ## 2.0.1 - 2019-01-15
 ### Fixed
 - Incorrect verbiage w/ min/max error messaging
