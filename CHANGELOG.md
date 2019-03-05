@@ -8,6 +8,14 @@ Changelog
 ### Added
 - Integrations field has an abstract `getObjectLabel` method that must be implemented.
 
+## 2.0.2 - 2019-01-16
+### Added
+- Field type is included in index as an option.
+
+## 2.0.1 - 2019-01-15
+### Fixed
+- Incorrect verbiage w/ min/max error messaging
+
 ## 2.0.0 - 2019-01-08
 ### Changed
 - Major refactoring 

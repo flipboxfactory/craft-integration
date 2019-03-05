@@ -11,6 +11,7 @@ namespace flipbox\craft\integration\fields;
 use Craft;
 use craft\base\ElementInterface;
 use craft\base\Field;
+use craft\base\PreviewableFieldInterface;
 use craft\helpers\Component as ComponentHelper;
 use flipbox\craft\ember\records\ActiveRecord;
 use flipbox\craft\ember\validators\MinMaxValidator;
@@ -27,7 +28,7 @@ use yii\helpers\ArrayHelper;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 2.0.0
  */
-abstract class Integrations extends Field
+abstract class Integrations extends Field implements PreviewableFieldInterface
 {
     use ModifyElementQueryTrait,
         NormalizeValueTrait;
@@ -194,11 +195,15 @@ abstract class Integrations extends Field
                 'max' => $this->max ? (int)$this->max : null,
                 'tooFew' => Craft::t(
                     static::TRANSLATION_CATEGORY,
-                    '{attribute} should contain at least {min, number} {min, plural, one{domain} other{domains}}.'
+                    '{attribute} should contain at least ' .
+                    '{min, number} ' .
+                    '{min, plural, one{association} other{associations}}.'
                 ),
                 'tooMany' => Craft::t(
                     static::TRANSLATION_CATEGORY,
-                    '{attribute} should contain at most {max, number} {max, plural, one{domain} other{domains}}.'
+                    '{attribute} should contain at most ' .
+                    '{max, number} ' .
+                    '{max, plural, one{association} other{associations}}.'
                 ),
                 'skipOnEmpty' => false
             ]
@@ -579,6 +584,27 @@ abstract class Integrations extends Field
             $this->addError('users', 'Unable to associate objects.');
             throw new Exception('Unable to associate objects.');
         }
+    }
+
+
+    /*******************************************
+     * INDEX
+     *******************************************/
+
+    /**
+     * @inheritdoc
+     */
+    public function getTableAttributeHtml($value, ElementInterface $element): string
+    {
+        if ($value instanceof IntegrationAssociationQuery) {
+            $ids = (clone $value)
+                ->select(['objectId'])
+                ->column();
+
+            return StringHelper::toString($ids, ', ');
+        }
+
+        return '';
     }
 
 
