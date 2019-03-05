@@ -58,7 +58,7 @@ class AssociateObject extends Action
         int $siteId = null,
         int $sortOrder = null
     ) {
-    
+
         // Resolve Field
         $field = $this->resolveField($field);
         $element = $this->resolveElement($element);

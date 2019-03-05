@@ -55,7 +55,7 @@ trait ModifyElementQueryTrait
         ElementQuery $query,
         string $value
     ) {
-    
+
 
         if ($value === 'not :empty:') {
             $value = ':notempty:';
@@ -77,7 +77,7 @@ trait ModifyElementQueryTrait
         ElementQuery $query,
         $value
     ) {
-    
+
 
         $alias = $this->tableAlias();
         $name = '{{%' . $this->tableAlias() . '}}';
@@ -105,7 +105,7 @@ trait ModifyElementQueryTrait
         ElementQuery $query,
         string $value
     ) {
-    
+
 
         $operator = ($value === ':notempty:' ? '!=' : '=');
         $query->subQuery->andWhere(
@@ -128,7 +128,7 @@ trait ModifyElementQueryTrait
         string $name,
         string $operator
     ): string {
-    
+
 
         return "(select count([[{$alias}.elementId]]) from " .
             $name .

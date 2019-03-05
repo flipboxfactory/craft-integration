@@ -49,7 +49,7 @@ class CreateFieldItem extends Action
 
         $recordClass = $field::recordClass();
 
-        /** @var $record IntegrationAssociation  */
+        /** @var $record IntegrationAssociation */
         $record = new $recordClass();
         $record->setField($field)
             ->setElement($element)
@@ -80,7 +80,7 @@ class CreateFieldItem extends Action
         ElementInterface $element,
         IntegrationAssociation $record
     ) {
-    
+
         // Check access
         if (($access = $this->checkAccess($field, $element, $record)) !== true) {
             return $access;
@@ -104,7 +104,7 @@ class CreateFieldItem extends Action
         Integrations $field,
         IntegrationAssociation $record
     ): array {
-    
+
 
         $view = Craft::$app->getView();
 

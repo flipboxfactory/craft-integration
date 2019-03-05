@@ -12,8 +12,6 @@ use Craft;
 use craft\base\ElementInterface;
 use craft\base\Field;
 use craft\helpers\Component as ComponentHelper;
-use craft\helpers\StringHelper;
-use flipbox\craft\ember\helpers\ModelHelper;
 use flipbox\craft\ember\records\ActiveRecord;
 use flipbox\craft\ember\validators\MinMaxValidator;
 use flipbox\craft\integration\events\RegisterIntegrationFieldActionsEvent;
@@ -100,11 +98,6 @@ abstract class Integrations extends Field
     const SETTINGS_TEMPLATE_PATH = '';
 
     /**
-     * @var string
-     */
-    public $object;
-
-    /**
      * @var int|null
      */
     public $min;
@@ -155,6 +148,11 @@ abstract class Integrations extends Field
     abstract public static function recordClass(): string;
 
     /**
+     * @return string
+     */
+    abstract protected function getObjectLabel(): string;
+
+    /**
      * @inheritdoc
      */
     public static function hasContentColumn(): bool
@@ -178,18 +176,6 @@ abstract class Integrations extends Field
         /** @var ActiveRecord $recordClass */
         $recordClass = static::recordClass();
         return $recordClass::tableAlias();
-    }
-
-    /*******************************************
-     * OBJECT
-     *******************************************/
-
-    /**
-     * @return string
-     */
-    public function getObjectLabel(): string
-    {
-        return StringHelper::titleize($this->object);
     }
 
     /*******************************************
@@ -219,6 +205,7 @@ abstract class Integrations extends Field
         ];
     }
 
+
     /*******************************************
      * RULES
      *******************************************/
@@ -232,13 +219,7 @@ abstract class Integrations extends Field
             parent::rules(),
             [
                 [
-                    'object',
-                    'required',
-                    'message' => Craft::t(static::TRANSLATION_CATEGORY, 'Object cannot be empty.')
-                ],
-                [
                     [
-                        'object',
                         'min',
                         'max',
                         'viewUrl',
@@ -247,7 +228,7 @@ abstract class Integrations extends Field
                     ],
                     'safe',
                     'on' => [
-                        ModelHelper::SCENARIO_DEFAULT
+                        static::SCENARIO_DEFAULT
                     ]
                 ]
             ]
@@ -311,7 +292,6 @@ abstract class Integrations extends Field
         ElementInterface $element = null,
         bool $static = false
     ): array {
-    
 
         return [
             'field' => $this,
@@ -641,7 +621,6 @@ abstract class Integrations extends Field
     {
         return array_merge(
             [
-                'object',
                 'min',
                 'max',
                 'viewUrl',

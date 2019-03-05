@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## 2.1.0 - 2019-03-04
+### Removed
+- Integrations field no longer has an 'objects' property.
+
+### Added
+- Integrations field has an abstract `getObjectLabel` method that must be implemented.
+
 ## 2.0.0 - 2019-01-08
 ### Changed
 - Major refactoring 

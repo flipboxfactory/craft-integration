@@ -10,10 +10,8 @@ namespace flipbox\craft\integration\records;
 
 use Craft;
 use craft\helpers\Json;
-use flipbox\craft\ember\helpers\ModelHelper;
 use flipbox\craft\ember\models\HandleRulesTrait;
 use flipbox\craft\ember\records\ActiveRecordWithId;
-use flipbox\craft\integration\connections\ConnectionInterface;
 use flipbox\craft\integration\queries\IntegrationConnectionQuery;
 use yii\validators\UniqueValidator;
 
@@ -24,7 +22,7 @@ use yii\validators\UniqueValidator;
  * @property string $class
  * @property array $settings
  */
-abstract class IntegrationConnection extends ActiveRecordWithId implements ConnectionInterface
+abstract class IntegrationConnection extends ActiveRecordWithId
 {
     use HandleRulesTrait;
 
@@ -32,26 +30,6 @@ abstract class IntegrationConnection extends ActiveRecordWithId implements Conne
      * The query class this record uses
      */
     const QUERY_CLASS = IntegrationConnectionQuery::class;
-
-    /**
-     * @inheritdoc
-     */
-    public function init()
-    {
-        parent::init();
-
-        // Always this class
-        $this->class = static::class;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function instantiate($row)
-    {
-        $class = $row['class'] ?? static::class;
-        return new $class;
-    }
 
     /**
      * @param static $record
@@ -63,9 +41,11 @@ abstract class IntegrationConnection extends ActiveRecordWithId implements Conne
         $record->setOldAttribute('settings', $record->ensureSettings());
     }
 
+
     /*******************************************
      * QUERY
      *******************************************/
+
     /**
      * @noinspection PhpDocMissingThrowsInspection
      * @return IntegrationConnectionQuery
@@ -124,11 +104,12 @@ abstract class IntegrationConnection extends ActiveRecordWithId implements Conne
                 [
                     [
                         'class',
-                        'settings'
+                        'settings',
+                        'enabled'
                     ],
                     'safe',
                     'on' => [
-                        ModelHelper::SCENARIO_DEFAULT
+                        static::SCENARIO_DEFAULT
                     ]
                 ]
             ]

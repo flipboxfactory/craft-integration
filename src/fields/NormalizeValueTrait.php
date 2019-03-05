@@ -100,7 +100,7 @@ trait NormalizeValueTrait
         array $value,
         ElementInterface $element = null
     ) {
-    
+
 
         $models = [];
         $sortOrder = 1;
@@ -121,7 +121,7 @@ trait NormalizeValueTrait
         int &$sortOrder,
         ElementInterface $element = null
     ): IntegrationAssociation {
-    
+
 
         if (is_array($value)) {
             $value = StringHelper::toString($value);
@@ -148,7 +148,7 @@ trait NormalizeValueTrait
     protected function normalizeQueryEmptyValue(
         IntegrationAssociationQuery $query
     ) {
-    
+
         $query->setCachedResult([]);
     }
 }

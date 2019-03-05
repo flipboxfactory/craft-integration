@@ -9,7 +9,6 @@
 namespace flipbox\craft\integration\records;
 
 use Craft;
-use flipbox\craft\ember\helpers\ModelHelper;
 use flipbox\craft\ember\records\ActiveRecord;
 use flipbox\craft\ember\records\ElementAttributeTrait;
 use flipbox\craft\ember\records\FieldAttributeTrait;
@@ -88,7 +87,7 @@ abstract class IntegrationAssociation extends ActiveRecord
                     ],
                     'safe',
                     'on' => [
-                        ModelHelper::SCENARIO_DEFAULT
+                        static::SCENARIO_DEFAULT
                     ]
                 ]
             ]
