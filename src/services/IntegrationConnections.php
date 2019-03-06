@@ -130,7 +130,6 @@ abstract class IntegrationConnections extends Component
 
             if ($config = (new Query())
                 ->select([
-                    'id',
                     'handle',
                     'class',
                     'settings',
