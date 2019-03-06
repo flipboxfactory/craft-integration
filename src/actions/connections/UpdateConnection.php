@@ -20,6 +20,7 @@ abstract class UpdateConnection extends UpdateRecord
      * @return array
      */
     public $validBodyParams = [
+        'name',
         'handle',
         'class',
         'enabled'
