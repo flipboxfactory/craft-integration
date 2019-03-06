@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## Unreleased
+### Added
+- Cache and Connection abstract services
+
 ## 2.1.0 - 2019-03-04
 ### Removed
 - Integrations field no longer has an 'objects' property.
