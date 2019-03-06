@@ -19,6 +19,7 @@ use yii\validators\UniqueValidator;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 2.0.0
  *
+ * @property string $name
  * @property string $class
  * @property array $settings
  */
@@ -91,7 +92,8 @@ abstract class IntegrationConnection extends ActiveRecordWithId
             [
                 [
                     [
-                        'class'
+                        'class',
+                        'name'
                     ],
                     'required'
                 ],
@@ -103,6 +105,7 @@ abstract class IntegrationConnection extends ActiveRecordWithId
                 ],
                 [
                     [
+                        'name',
                         'class',
                         'settings',
                         'enabled'

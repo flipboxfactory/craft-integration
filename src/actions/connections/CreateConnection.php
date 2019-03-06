@@ -20,6 +20,7 @@ abstract class CreateConnection extends CreateRecord
      * @return array
      */
     public $validBodyParams = [
+        'name',
         'handle',
         'class',
         'enabled'

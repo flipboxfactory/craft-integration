@@ -30,6 +30,7 @@ abstract class IntegrationConnections extends Migration
             static::tableName(),
             [
                 'id' => $this->primaryKey(),
+                'name' => $this->string()->notNull(),
                 'handle' => $this->string()->notNull(),
                 'class' => $this->string()->notNull(),
                 'settings' => $this->text(),
