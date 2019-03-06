@@ -220,7 +220,8 @@ abstract class IntegrationConnections extends Component
             $handle = ArrayHelper::getValue($config, 'handle');
 
             if (!array_key_exists($handle, $this->connections)) {
-                $this->enabled[$handle] = (bool)ArrayHelper::remove($config, 'enabled', false);;
+                $this->enabled[$handle] = (bool)ArrayHelper::remove($config, 'enabled', false);
+                ;
                 $this->connections[$handle] = $this->create($config);
             }
         }
