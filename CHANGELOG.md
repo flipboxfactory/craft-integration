@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## Unreleased
+## 2.2.0 - 2019-03-06
 ### Added
 - Cache and Connection abstract services
 
