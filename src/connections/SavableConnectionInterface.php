@@ -39,4 +39,24 @@ interface SavableConnectionInterface
      * @return bool
      */
     public function validate($attributeNames = null, $clearErrors = true);
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave(bool $isNew): bool;
+
+    /**
+     * @inheritdoc
+     */
+    public function afterSave(bool $isNew, array $changedAttributes);
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeDelete(): bool;
+
+    /**
+     * @inheritdoc
+     */
+    public function afterDelete();
 }

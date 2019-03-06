@@ -101,7 +101,7 @@ abstract class IntegrationConnections extends Component
      * @param string $handle
      * @throws ConnectionNotFound
      */
-    protected function handleCacheNotFound(string $handle)
+    protected function handleConnectionNotFound(string $handle)
     {
         throw new ConnectionNotFound(
             sprintf(
@@ -167,7 +167,7 @@ abstract class IntegrationConnections extends Component
         bool $enabledOnly = true
     ) {
         if (null === ($connection = $this->find($handle, $enabledOnly))) {
-            return $this->handleCacheNotFound($handle);
+            return $this->handleConnectionNotFound($handle);
         }
 
         return $connection;
