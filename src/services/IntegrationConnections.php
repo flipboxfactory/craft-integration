@@ -201,4 +201,31 @@ abstract class IntegrationConnections extends Component
 
         return $connection;
     }
+
+    /**
+     * @return array
+     */
+    public function all(): array
+    {
+        $configs = (new Query())
+            ->select([
+                'handle',
+                'class',
+                'settings',
+                'enabled'
+            ])
+            ->from(static::tableName())
+            ->all();
+
+        foreach ($configs as $config) {
+            $handle = ArrayHelper::getValue($config, 'handle');
+
+            if (!array_key_exists($handle, $this->connections)) {
+                $this->enabled[$handle] = (bool)ArrayHelper::remove($config, 'enabled', false);;
+                $this->connections[$handle] = $this->create($config);
+            }
+        }
+
+        return $this->connections;
+    }
 }
