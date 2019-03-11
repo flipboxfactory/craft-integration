@@ -151,7 +151,7 @@ abstract class Integrations extends Field implements PreviewableFieldInterface
     /**
      * @return string
      */
-    abstract protected function getObjectLabel(): string;
+    abstract public function getObjectLabel(): string;
 
     /**
      * @inheritdoc
