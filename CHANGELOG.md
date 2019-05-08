@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 2.2.1 - 2019-05-08
+### Fixed
+- Migration would attempt to add 'name' column even if it already existed.
+
 ## 2.2.0 - 2019-03-06
 ### Added
 - Cache and Connection abstract services

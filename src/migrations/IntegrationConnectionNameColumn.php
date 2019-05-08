@@ -26,9 +26,19 @@ abstract class IntegrationConnectionNameColumn extends Migration
 
     /**
      * @inheritdoc
+     * @throws \yii\base\NotSupportedException
+     * @throws \yii\db\Exception
      */
     public function safeUp()
     {
+        $table = $this->getDb()->getSchema()->getTableSchema(
+            $this->getDb()->getSchema()->getRawTableName(static::tableName())
+        );
+
+        if (isset($table->columns['name'])) {
+            return true;
+        }
+
         $this->addColumn(
             static::tableName(),
             'name',
