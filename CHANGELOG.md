@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## Unreleased
+### Changed
+- `Field::getObjectLabel` is now public (was protected).
+
 ## 2.2.1 - 2019-05-08
 ### Fixed
 - Migration would attempt to add 'name' column even if it already existed.
