@@ -83,6 +83,6 @@ trait EnvironmentalTableTrait
         $return = static::createEnvironmentTableMigration()->up();
         ob_end_clean();
 
-        return $return;
+        return $return !== false;
     }
 }
