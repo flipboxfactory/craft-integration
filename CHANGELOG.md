@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## Unreleased
+## 2.2.2 - 2019-05-13
 ### Changed
 - `Field::getObjectLabel` is now public (was protected).
 
