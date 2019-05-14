@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 2.2.3 - 2019-05-14
+### Fixed
+- Handling a `migration::up()` response appropriately
+
 ## 2.2.2 - 2019-05-13
 ### Changed
 - `Field::getObjectLabel` is now public (was protected).
