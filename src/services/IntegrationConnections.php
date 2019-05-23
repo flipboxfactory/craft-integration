@@ -137,7 +137,7 @@ abstract class IntegrationConnections extends Component
                 ])
                 ->from(static::tableName())
                 ->andWhere([
-                    'handle' => $handle
+                    is_numeric($handle) ? 'id' : 'handle' => $handle
                 ])
                 ->one()
             ) {
