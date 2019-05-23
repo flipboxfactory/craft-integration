@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## Unreleased
+## 2.2.3 - 2019-05-23
 ### Updated
 - `IntegrationConnections::find()` (service) now accepts a connection 'id' although it's recommended to use 'handle'
 
