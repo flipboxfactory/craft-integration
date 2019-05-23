@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 2.2.4 - 2019-05-23
+### Updated
+- `IntegrationConnections::find()` (service) now accepts a connection 'id' although it's recommended to use 'handle'
+
 ## 2.2.3 - 2019-05-14
 ### Fixed
 - Handling a `migration::up()` response appropriately

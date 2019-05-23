@@ -1,7 +1,7 @@
 {
   "name": "flipboxfactory/craft-integration",
   "description": "Integration package for Craft CMS",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "license": "MIT",
   "authors": [{
     "name": "Flipbox Factory",
