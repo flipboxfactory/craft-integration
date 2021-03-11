@@ -1,5 +1,11 @@
 Changelog
 =========
+## 2.3.0 - 2021-03-11
+### Updated
+- Ember dependency to >= 2.6.5
+
+### Fixed
+- PHP 8 errors with mismatch typings
 
 ## 2.2.4 - 2019-05-23
 ### Updated

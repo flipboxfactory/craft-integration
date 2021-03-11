@@ -9,7 +9,8 @@
 namespace flipbox\craft\integration\actions\fields;
 
 use craft\base\ElementInterface;
-use flipbox\craft\ember\actions\ManageTrait;
+use flipbox\craft\ember\actions\CheckAccessTrait;
+use flipbox\craft\ember\actions\ResponseTrait;
 use flipbox\craft\integration\actions\ResolverTrait;
 use flipbox\craft\integration\fields\actions\IntegrationActionInterface;
 use flipbox\craft\integration\fields\Integrations;
@@ -22,8 +23,9 @@ use yii\web\HttpException;
  */
 class PerformFieldAction extends Action
 {
-    use ManageTrait,
-        ResolverTrait;
+    use ResolverTrait,
+        CheckAccessTrait,
+        ResponseTrait;
 
     /**
      * @param string $field

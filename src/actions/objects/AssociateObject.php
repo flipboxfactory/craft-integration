@@ -8,7 +8,8 @@
 
 namespace flipbox\craft\integration\actions\objects;
 
-use flipbox\craft\ember\actions\ManageTrait;
+use flipbox\craft\ember\actions\CheckAccessTrait;
+use flipbox\craft\ember\actions\ResponseTrait;
 use flipbox\craft\ember\helpers\SiteHelper;
 use flipbox\craft\integration\actions\ResolverTrait;
 use flipbox\craft\integration\records\IntegrationAssociation;
@@ -20,8 +21,9 @@ use yii\base\Action;
  */
 class AssociateObject extends Action
 {
-    use ManageTrait,
-        ResolverTrait;
+    use ResolverTrait,
+        CheckAccessTrait,
+        ResponseTrait;
 
     /**
      * Validate that the HubSpot Object exists prior to associating
@@ -29,6 +31,25 @@ class AssociateObject extends Action
      * @var bool
      */
     public $validate = true;
+
+    /**
+     * @param IntegrationAssociation $data
+     * @return mixed
+     * @throws \yii\web\HttpException
+     */
+    protected function runInternal(IntegrationAssociation $data)
+    {
+        // Check access
+        if (($access = $this->checkAccess($data)) !== true) {
+            return $access;
+        }
+
+        if (!$this->performAction($data)) {
+            return $this->handleFailResponse($data);
+        }
+
+        return $this->handleSuccessResponse($data);
+    }
 
     /**
      * @param IntegrationAssociation $record

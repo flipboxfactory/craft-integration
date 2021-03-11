@@ -8,7 +8,8 @@
 
 namespace flipbox\craft\integration\actions\objects;
 
-use flipbox\craft\ember\actions\ManageTrait;
+use flipbox\craft\ember\actions\CheckAccessTrait;
+use flipbox\craft\ember\actions\ResponseTrait;
 use flipbox\craft\ember\helpers\SiteHelper;
 use flipbox\craft\integration\actions\ResolverTrait;
 use flipbox\craft\integration\records\IntegrationAssociation;
@@ -21,8 +22,9 @@ use yii\web\HttpException;
  */
 class DissociateObject extends Action
 {
-    use ManageTrait,
-        ResolverTrait;
+    use ResolverTrait,
+        CheckAccessTrait,
+        ResponseTrait;
 
     /**
      * @var int
@@ -61,6 +63,25 @@ class DissociateObject extends Action
         }
 
         return $this->runInternal($association);
+    }
+
+    /**
+     * @param IntegrationAssociation $data
+     * @return mixed
+     * @throws \yii\web\HttpException
+     */
+    protected function runInternal(IntegrationAssociation $data)
+    {
+        // Check access
+        if (($access = $this->checkAccess($data)) !== true) {
+            return $access;
+        }
+
+        if (!$this->performAction($data)) {
+            return $this->handleFailResponse($data);
+        }
+
+        return $this->handleSuccessResponse($data);
     }
 
     /**

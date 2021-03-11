@@ -10,7 +10,8 @@ namespace flipbox\craft\integration\actions\fields;
 
 use Craft;
 use craft\base\ElementInterface;
-use flipbox\craft\ember\actions\ManageTrait;
+use flipbox\craft\ember\actions\CheckAccessTrait;
+use flipbox\craft\ember\actions\ResponseTrait;
 use flipbox\craft\ember\helpers\SiteHelper;
 use flipbox\craft\integration\actions\ResolverTrait;
 use flipbox\craft\integration\fields\Integrations;
@@ -24,8 +25,9 @@ use yii\web\HttpException;
  */
 class CreateFieldItem extends Action
 {
-    use ManageTrait,
-        ResolverTrait;
+    use ResolverTrait,
+        CheckAccessTrait,
+        ResponseTrait;
 
     /**
      * @param string $field
