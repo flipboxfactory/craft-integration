@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 3.0.0 - 2019-05-23
+### Updated
+- Updated dependencies: `flipboxfactory/craft-psr16` for php 8 compatibility
+
 ## 2.2.4 - 2019-05-23
 ### Updated
 - `IntegrationConnections::find()` (service) now accepts a connection 'id' although it's recommended to use 'handle'
