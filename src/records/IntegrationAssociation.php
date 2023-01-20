@@ -47,7 +47,7 @@ abstract class IntegrationAssociation extends ActiveRecord
      * @noinspection PhpDocMissingThrowsInspection
      * @return IntegrationAssociationQuery
      */
-    public static function find(): IntegrationAssociationQuery
+    public static function find(): \craft\db\ActiveQuery
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         /** @noinspection PhpUnhandledExceptionInspection */
@@ -97,7 +97,7 @@ abstract class IntegrationAssociation extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function beforeSave($insert)
+    public function beforeSave($insert): bool
     {
         $this->ensureSortOrder(
             [

@@ -218,7 +218,7 @@ abstract class Integrations extends Field implements PreviewableFieldInterface
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return array_merge(
             parent::rules(),
@@ -249,7 +249,7 @@ abstract class Integrations extends Field implements PreviewableFieldInterface
      * @param IntegrationAssociationQuery $value
      * @inheritdoc
      */
-    public function getSearchKeywords($value, ElementInterface $element): string
+    public function getSearchKeywords(mixed $value, ElementInterface $element): string
     {
         $objects = [];
 
@@ -265,14 +265,13 @@ abstract class Integrations extends Field implements PreviewableFieldInterface
     /*******************************************
      * VIEWS
      *******************************************/
-
     /**
      * @inheritdoc
      * @param IntegrationAssociationQuery $value
-     * @throws \Twig_Error_Loader
+     * @throws \Twig\Error\LoaderError
      * @throws \yii\base\Exception
      */
-    public function getInputHtml($value, ElementInterface $element = null): string
+    public function getInputHtml(mixed $value, ?\craft\base\ElementInterface $element = null): string
     {
         $value->limit(null);
 
@@ -511,7 +510,7 @@ abstract class Integrations extends Field implements PreviewableFieldInterface
      * @throws \Throwable
      * @throws \yii\db\StaleObjectException
      */
-    public function afterElementSave(ElementInterface $element, bool $isNew)
+    public function afterElementSave(ElementInterface $element, bool $isNew): void
     {
         /** @var IntegrationAssociationQuery $query */
         $query = $element->getFieldValue($this->handle);
@@ -594,7 +593,7 @@ abstract class Integrations extends Field implements PreviewableFieldInterface
     /**
      * @inheritdoc
      */
-    public function getTableAttributeHtml($value, ElementInterface $element): string
+    public function getTableAttributeHtml(mixed $value, ElementInterface $element): string
     {
         if ($value instanceof IntegrationAssociationQuery) {
             $ids = (clone $value)
@@ -611,13 +610,12 @@ abstract class Integrations extends Field implements PreviewableFieldInterface
     /*******************************************
      * SETTINGS
      *******************************************/
-
     /**
      * @inheritdoc
-     * @throws \Twig_Error_Loader
+     * @throws \Twig\Error\LoaderError
      * @throws \yii\base\Exception
      */
-    public function getSettingsHtml()
+    public function getSettingsHtml(): ?string
     {
         return Craft::$app->getView()->renderTemplate(
             static::SETTINGS_TEMPLATE_PATH,

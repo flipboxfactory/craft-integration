@@ -51,7 +51,7 @@ abstract class IntegrationConnection extends ActiveRecordWithId
      * @noinspection PhpDocMissingThrowsInspection
      * @return IntegrationConnectionQuery
      */
-    public static function find(): IntegrationConnectionQuery
+    public static function find(): \craft\db\ActiveQuery
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         /** @noinspection PhpUnhandledExceptionInspection */

@@ -34,7 +34,7 @@ class CreateFieldItem extends Action
      * @param int|null $sortOrder
      * @return mixed
      * @throws HttpException
-     * @throws \Twig_Error_Loader
+     * @throws \Twig\Error\LoaderError
      * @throws \yii\base\Exception
      * @throws \yii\web\UnauthorizedHttpException
      */
@@ -71,7 +71,7 @@ class CreateFieldItem extends Action
      * @param ElementInterface $element
      * @param IntegrationAssociation $record
      * @return mixed
-     * @throws \Twig_Error_Loader
+     * @throws \Twig\Error\LoaderError
      * @throws \yii\base\Exception
      * @throws \yii\web\UnauthorizedHttpException
      */
@@ -97,7 +97,7 @@ class CreateFieldItem extends Action
      * @param Integrations $field
      * @param IntegrationAssociation $record
      * @return array
-     * @throws \Twig_Error_Loader
+     * @throws \Twig\Error\LoaderError
      * @throws \yii\base\Exception
      */
     public function performAction(
