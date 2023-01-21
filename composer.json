@@ -16,8 +16,8 @@
   "require": {
     "php": ">=8.0",
     "craftcms/cms": "~4.0",
-    "flipboxfactory/craft-ember": "dev-feature/craft4",
-    "flipboxfactory/craft-psr16": "dev-feature/php8",
+    "flipboxfactory/craft-ember": "~3.0",
+    "flipboxfactory/craft-psr16": "~2.0",
     "flipboxdigital/skeleton": "^2.1"
   },
   "require-dev": {
