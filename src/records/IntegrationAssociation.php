@@ -47,7 +47,7 @@ abstract class IntegrationAssociation extends ActiveRecord
      * @noinspection PhpDocMissingThrowsInspection
      * @return IntegrationAssociationQuery
      */
-    public static function find(): \craft\db\ActiveQuery
+    public static function find(): IntegrationAssociationQuery
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         /** @noinspection PhpUnhandledExceptionInspection */

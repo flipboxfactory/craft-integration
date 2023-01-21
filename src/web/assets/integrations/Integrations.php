@@ -24,7 +24,7 @@ class Integrations extends AssetBundle
     public function init()
     {
         $this->js = [
-            'js/Integrations' . $this->dotJs()
+            'js/Integrations.min.js'
         ];
         $this->css = [
             'css/Integrations.css'

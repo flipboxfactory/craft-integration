@@ -97,8 +97,12 @@ class AssociateObject extends Action
      * @param IntegrationAssociation $record
      * @throws \Exception
      */
-    protected function performAction(IntegrationAssociation $record): bool
+    protected function performAction($record): bool
     {
+        if (!$record instanceof IntegrationAssociation) {
+            return false;
+        }
+
         if ($this->validate === true && !$this->validate($record)) {
             return false;
         }

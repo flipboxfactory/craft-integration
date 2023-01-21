@@ -52,14 +52,14 @@ trait NormalizeValueTrait
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @param ElementInterface|null $element
      * @return IntegrationAssociationQuery
      */
     public function normalizeValue(
-        $value,
-        ElementInterface $element = null
-    ) {
+        mixed $value,
+        ?ElementInterface $element = null
+    ): IntegrationAssociationQuery {
         if ($value instanceof IntegrationAssociationQuery) {
             return $value;
         }

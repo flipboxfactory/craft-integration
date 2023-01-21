@@ -10,7 +10,9 @@ namespace flipbox\craft\integration\actions\fields;
 
 use Craft;
 use craft\base\ElementInterface;
+use flipbox\craft\ember\actions\CheckAccessTrait;
 use flipbox\craft\ember\actions\ManageTrait;
+use flipbox\craft\ember\actions\ResponseTrait;
 use flipbox\craft\ember\helpers\SiteHelper;
 use flipbox\craft\integration\actions\ResolverTrait;
 use flipbox\craft\integration\fields\Integrations;
@@ -24,7 +26,8 @@ use yii\web\HttpException;
  */
 class CreateFieldItem extends Action
 {
-    use ManageTrait,
+    use CheckAccessTrait,
+        ResponseTrait,
         ResolverTrait;
 
     /**
@@ -86,7 +89,7 @@ class CreateFieldItem extends Action
             return $access;
         }
 
-        if (null === ($html = $this->performAction($field, $record))) {
+        if (null === ($html = $this->buildHtml($field, $record))) {
             return $this->handleFailResponse($html);
         }
 
@@ -100,11 +103,10 @@ class CreateFieldItem extends Action
      * @throws \Twig\Error\LoaderError
      * @throws \yii\base\Exception
      */
-    public function performAction(
+    public function buildHtml(
         Integrations $field,
         IntegrationAssociation $record
     ): array {
-
 
         $view = Craft::$app->getView();
 

@@ -8,6 +8,7 @@
 
 namespace flipbox\craft\integration\fields;
 
+use craft\db\QueryAbortedException;
 use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
 use craft\helpers\Db;
@@ -28,23 +29,23 @@ trait ModifyElementQueryTrait
     /**
      * @inheritdoc
      */
-    public function modifyElementsQuery(ElementQueryInterface $query, $value)
+    public function modifyElementsQuery(ElementQueryInterface $query, mixed $value): void
     {
         if ($value === null || !$query instanceof ElementQuery) {
-            return null;
+            return;
         }
 
         if ($value === false) {
-            return false;
+            throw new QueryAbortedException();
         }
 
         if (is_string($value)) {
             $this->modifyElementsQueryForStringValue($query, $value);
-            return null;
+            return;
         }
 
         $this->modifyElementsQueryForTargetValue($query, $value);
-        return null;
+        return;
     }
 
     /**

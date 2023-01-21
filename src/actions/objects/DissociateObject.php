@@ -69,8 +69,12 @@ class DissociateObject extends Action
      * @throws \Throwable
      * @throws \yii\db\StaleObjectException
      */
-    protected function performAction(IntegrationAssociation $record): bool
+    protected function performAction($record): bool
     {
+        if (!$record instanceof IntegrationAssociation) {
+            return false;
+        }
+
         return $record->delete();
     }
 }
