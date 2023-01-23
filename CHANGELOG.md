@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## 3.0.0 - 2019-05-23
+## 3.0.0 - 2023-01-20
 ### Updated
 - Updated dependencies: `flipboxfactory/craft-psr16` for php 8 compatibility
 
