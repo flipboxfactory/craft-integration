@@ -13,6 +13,7 @@ use craft\base\ElementInterface;
 use craft\base\Field;
 use craft\base\PreviewableFieldInterface;
 use craft\helpers\Component as ComponentHelper;
+use craft\helpers\StringHelper;
 use flipbox\craft\ember\records\ActiveRecord;
 use flipbox\craft\ember\validators\MinMaxValidator;
 use flipbox\craft\integration\events\RegisterIntegrationFieldActionsEvent;
@@ -255,7 +256,7 @@ abstract class Integrations extends Field implements PreviewableFieldInterface
 
         /** @var IntegrationAssociation $association */
         foreach ($value->all() as $association) {
-            array_push($objects, $association->objectId);
+            $objects[] = $association->objectId;
         }
 
         return parent::getSearchKeywords($objects, $element);
@@ -306,17 +307,17 @@ abstract class Integrations extends Field implements PreviewableFieldInterface
             'itemTemplate' => static::INPUT_ITEM_TEMPLATE_PATH,
             'settings' => [
                 'translationCategory' => static::TRANSLATION_CATEGORY,
-                'limit' => $this->max ? $this->max : null,
+                'limit' => $this->max ?? null,
                 'data' => [
                     'field' => $this->id,
-                    'element' => $element ? $element->getId() : null
+                    'element' => $element?->getId()
                 ],
                 'actions' => $this->getActionHtml($element),
                 'actionAction' => static::ACTION_PREFORM_ACTION_PATH,
                 'createItemAction' => static::ACTION_CREATE_ITEM_PATH,
                 'itemData' => [
                     'field' => $this->id,
-                    'element' => $element ? $element->getId() : null
+                    'element' => $element?->getId()
                 ],
                 'itemSettings' => [
                     'translationCategory' => static::TRANSLATION_CATEGORY,
@@ -325,7 +326,7 @@ abstract class Integrations extends Field implements PreviewableFieldInterface
                     'dissociateAction' => static::ACTION_DISSOCIATION_ITEM_PATH,
                     'data' => [
                         'field' => $this->id,
-                        'element' => $element ? $element->getId() : null
+                        'element' => $element?->getId()
                     ],
                     'actions' => $this->getItemActionHtml($element),
                 ]

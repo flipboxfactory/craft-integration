@@ -53,7 +53,6 @@ abstract class IntegrationConnection extends ActiveRecordWithId
      */
     public static function find(): IntegrationConnectionQuery
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
         /** @noinspection PhpUnhandledExceptionInspection */
         return Craft::createObject(
             static::QUERY_CLASS,

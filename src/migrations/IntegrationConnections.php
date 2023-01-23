@@ -42,7 +42,7 @@ abstract class IntegrationConnections extends Migration
         );
 
         $this->createIndex(
-            $this->db->getIndexName(static::tableName(), 'handle', true),
+            $this->db->getIndexName(),
             static::tableName(),
             'handle',
             true

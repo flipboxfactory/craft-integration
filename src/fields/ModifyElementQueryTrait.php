@@ -45,7 +45,6 @@ trait ModifyElementQueryTrait
         }
 
         $this->modifyElementsQueryForTargetValue($query, $value);
-        return;
     }
 
     /**

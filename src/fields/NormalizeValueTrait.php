@@ -44,7 +44,7 @@ trait NormalizeValueTrait
         }
 
         $query->field($this)
-            ->siteId(SiteHelper::ensureSiteId($element === null ? null : $element->siteId))
+            ->siteId(SiteHelper::ensureSiteId($element?->siteId))
             ->elementId(($element === null || $element->getId() === null
             ) ? false : $element->getId());
 
@@ -86,7 +86,6 @@ trait NormalizeValueTrait
 
         if ($value === '') {
             $this->normalizeQueryEmptyValue($query);
-            return;
         }
     }
 
@@ -134,7 +133,7 @@ trait NormalizeValueTrait
         $association = new $recordClass();
         $association->setField($this)
             ->setElement($element)
-            ->setSiteId(SiteHelper::ensureSiteId($element === null ? null : $element->siteId));
+            ->setSiteId(SiteHelper::ensureSiteId($element?->siteId));
 
         $association->sortOrder = $sortOrder++;
         $association->objectId = $value;

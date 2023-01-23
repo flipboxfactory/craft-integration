@@ -49,7 +49,6 @@ abstract class IntegrationAssociation extends ActiveRecord
      */
     public static function find(): IntegrationAssociationQuery
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
         /** @noinspection PhpUnhandledExceptionInspection */
         return Craft::createObject(IntegrationAssociationQuery::class, [get_called_class()]);
     }

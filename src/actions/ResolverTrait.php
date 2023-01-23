@@ -54,7 +54,7 @@ trait ResolverTrait
     {
         if (null === ($element = Craft::$app->getElements()->getElementById($element))) {
             throw new HttpException(400, 'Invalid element');
-        };
+        }
 
         return $element;
     }
@@ -75,7 +75,7 @@ trait ResolverTrait
 
         if (null === ($record = $query->objectId($id)->one())) {
             throw new HttpException(400, 'Invalid value');
-        };
+        }
 
         return $record;
     }

@@ -25,12 +25,4 @@ abstract class UpdateConnection extends UpdateRecord
         'class',
         'enabled'
     ];
-
-    /**
-     * @inheritdoc
-     */
-    public function run($connection)
-    {
-        return parent::run($connection);
-    }
 }

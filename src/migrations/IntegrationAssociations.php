@@ -102,8 +102,7 @@ abstract class IntegrationAssociations extends Migration
             'elementId',
             ElementRecord::tableName(),
             'id',
-            'CASCADE',
-            null
+            'CASCADE'
         );
         $this->addForeignKey(
             null,

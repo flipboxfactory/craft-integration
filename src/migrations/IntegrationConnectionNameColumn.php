@@ -59,5 +59,7 @@ abstract class IntegrationConnectionNameColumn extends Migration
                 )
                 ->execute();
         }
+
+        return true;
     }
 }
