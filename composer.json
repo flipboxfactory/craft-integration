@@ -1,7 +1,7 @@
 {
   "name": "flipboxfactory/craft-integration",
   "description": "Integration package for Craft CMS",
-  "version": "3.0.0",
+  "version": "5.0.0",
   "license": "MIT",
   "authors": [{
     "name": "Flipbox Factory",
@@ -15,9 +15,9 @@
   ],
   "require": {
     "php": ">=8.0",
-    "craftcms/cms": "~4.0",
-    "flipboxfactory/craft-ember": "~3.0",
-    "flipboxfactory/craft-psr16": "~2.0",
+    "craftcms/cms": "^5.0",
+    "flipboxfactory/craft-ember": "^5.0",
+    "flipboxfactory/craft-psr16": "^1.0 || ^2.0",
     "flipboxdigital/skeleton": "^2.1"
   },
   "require-dev": {

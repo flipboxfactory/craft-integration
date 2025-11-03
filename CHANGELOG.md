@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 5.0.0 - 2025-11-03
+### Updated
+- Updated to support Craft v5
+
 ## 3.0.0 - 2023-01-20
 ### Updated
 - Updated dependencies: `flipboxfactory/craft-psr16` for php 8 compatibility
@@ -18,7 +22,7 @@ Changelog
 - `Field::getObjectLabel` is now public (was protected).
 
 ### Added
-- EnvironmentalTableTrait to assist w/ environment specific tables 
+- EnvironmentalTableTrait to assist w/ environment specific tables
 
 ## 2.2.1 - 2019-05-08
 ### Fixed
@@ -45,7 +49,7 @@ Changelog
 
 ## 2.0.0 - 2019-01-08
 ### Changed
-- Major refactoring 
+- Major refactoring
 
 ## 1.1.0.2 - 2018-09-07
 ### Fixed
@@ -73,7 +77,7 @@ Changelog
 
 ## 1.0.2 - 2018-07-18
 ### Changed
-- Integration Field service supports input/setting html variables overrides 
+- Integration Field service supports input/setting html variables overrides
 
 ### Removed
 - `IntegrationAssociation::validateObject()` is no longer required
